@@ -8,6 +8,12 @@
  *  - ImageList의 속성창에서 ImageSize를 변경하여 크기를 조정한다.
  *  - Button 속성창에서 ImageList를 지정한다.
  *  - ImageList 안에 포함된 이미지의 인덱스를 ImageIndex에 지정한다.
+ *  
+ * 코드설명
+ *  - 버튼은 1개
+ *  - 초기 상태는 Start 이미지와 Start 텍스트를 갖는다.
+ *  - Start 버튼을 클릭하면 Stop 이미자와 Stop 텍스트로 변경된다.
+ *  - Stop 버튼을 클릭하면 초기상태로 돌아온다.
  */
 namespace Hello
 {
