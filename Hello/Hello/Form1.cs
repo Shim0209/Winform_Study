@@ -26,7 +26,7 @@ namespace Hello
                 button1.ImageIndex = 2;
                 button1.Text = "Stop";
                 button1.BackColor = Color.Green;
-                flag = 1;
+                flag = 1; 
             }
             else
             {
