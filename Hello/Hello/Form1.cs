@@ -33,7 +33,7 @@ namespace Hello
                 button1.ImageIndex = 1;
                 button1.Text = "Start";
                 button1.BackColor = Color.White;
-                flag = 0;
+                flag = 0; 
             }
         }
     }
