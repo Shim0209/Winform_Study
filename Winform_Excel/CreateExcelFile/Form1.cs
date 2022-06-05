@@ -9,6 +9,7 @@ using Excel = Microsoft.Office.Interop.Excel;
  *  3. 코드 참고
  *  
  * # COM interop : 컴포넌트 오브젝트 모델(COM) 객체를 상호 운용할 수 있게 만드는 기술이다.
+ *                 즉, CLR을 사용하지 않는 어셈빌르(dll등)을 CLR에서 사용 될 수 있게 하는 기술을 뜻한다.
  */
 namespace CreateExcelFile
 {
@@ -21,10 +22,10 @@ namespace CreateExcelFile
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // 1. 앱 생성
+            // 1. 엑셀 응용프로그램 객체 생성
             Excel.Application xlApp = new Excel.Application();
 
-            // 앱이 생성 되었는지 검사
+            // 생성 되었는지 검사
             if(xlApp == null)
             {
                 MessageBox.Show("Excel is not properly installed!!");
