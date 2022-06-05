@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateExcelFile", "CreateEx
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenExcelFile", "OpenExcelFile\OpenExcelFile.csproj", "{B57392EA-C2D6-4C5A-9F63-4F3393314B56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadExcelFile", "ReadExcelFile\ReadExcelFile.csproj", "{CAA61A23-E2A8-4264-B6D9-CACB076F82E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B57392EA-C2D6-4C5A-9F63-4F3393314B56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B57392EA-C2D6-4C5A-9F63-4F3393314B56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B57392EA-C2D6-4C5A-9F63-4F3393314B56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAA61A23-E2A8-4264-B6D9-CACB076F82E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAA61A23-E2A8-4264-B6D9-CACB076F82E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAA61A23-E2A8-4264-B6D9-CACB076F82E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAA61A23-E2A8-4264-B6D9-CACB076F82E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
