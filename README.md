@@ -1,5 +1,9 @@
 # C# Winform
 
+## 카테고리
+- Winform_Basic : Winform의 기본적인 컨트롤 관련 코드 모음
+- Winform_Excel : Winform에서 C#으로 Excel을 다루는 코드 모음
+
 ### 학습환경
 - Visual Studio 2022
 - .NET 6.0
