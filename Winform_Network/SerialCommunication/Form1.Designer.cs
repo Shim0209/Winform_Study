@@ -46,7 +46,9 @@
             this.TxTB = new System.Windows.Forms.TextBox();
             this.CloseBtn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.RxTB = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -215,15 +217,26 @@
             this.CloseBtn.TabIndex = 6;
             this.CloseBtn.Text = "Close";
             this.CloseBtn.UseVisualStyleBackColor = true;
+            this.CloseBtn.Click += new System.EventHandler(this.CloseBtn_Click);
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.RxTB);
             this.groupBox2.Location = new System.Drawing.Point(10, 200);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(297, 238);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rx Data";
+            // 
+            // RxTB
+            // 
+            this.RxTB.Location = new System.Drawing.Point(6, 20);
+            this.RxTB.Multiline = true;
+            this.RxTB.Name = "RxTB";
+            this.RxTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.RxTB.Size = new System.Drawing.Size(285, 212);
+            this.RxTB.TabIndex = 0;
             // 
             // Form1
             // 
@@ -241,6 +254,8 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -265,6 +280,7 @@
         private System.Windows.Forms.TextBox TxTB;
         private System.Windows.Forms.Button CloseBtn;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox RxTB;
     }
 }
 

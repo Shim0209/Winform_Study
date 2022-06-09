@@ -38,13 +38,15 @@ namespace SerialCommunication
         const int OFF = 0;
         #endregion
 
+
+        #region Tx, Rx
         private void OpenBtn_Click(object sender, EventArgs e)
         {
-            serialPort1.PortName = PortCB.SelectedItem.ToString();
-            serialPort1.BaudRate = int.Parse(BaudRateCB.SelectedItem.ToString());
-            serialPort1.DataBits = int.Parse(DataBitsCB.SelectedItem.ToString());
-            serialPort1.StopBits = (StopBits)StopBitsCB.SelectedItem;
-            serialPort1.Parity = (Parity)ParityCB.SelectedItem;
+            serialPort1.PortName = PortCB.SelectedItem.Equals(null) ? "COM1" : PortCB.SelectedItem.ToString();
+            serialPort1.BaudRate = BaudRateCB.SelectedItem.Equals(null) ? 9600 : int.Parse(BaudRateCB.SelectedItem.ToString());
+            serialPort1.DataBits = DataBitsCB.SelectedItem.Equals(null) ? 8 : int.Parse(DataBitsCB.SelectedItem.ToString());
+            serialPort1.StopBits = StopBitsCB.SelectedItem.Equals(null) ? StopBits.One : GetStopBits(StopBitsCB.SelectedItem);
+            serialPort1.Parity = ParityCB.SelectedItem.Equals(null) ? Parity.None : GetParity(ParityCB.SelectedItem);
 
             if (!serialPort1.IsOpen)
             {
@@ -52,28 +54,51 @@ namespace SerialCommunication
                 {
                     serialPort1.Open();
                     OnOffBtnColor(ON);
+                    StartRx();
                 }
-                catch(Exception ex) 
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+
+            
+        }
+        private void CloseBtn_Click(object sender, EventArgs e)
+        {
+            if (serialPort1.IsOpen)
+            {
+                try
+                {
+                    serialPort1.Close();
+                    OnOffBtnColor(OFF);
+                }
+                catch(Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
                 }
             }
         }
-
-        #region Tx
         private void TxBtn_Click(object sender, EventArgs e)
         {
             string msg = TxTB.Text;
+            if (!serialPort1.IsOpen)
+            {
+                MessageBox.Show("Port가 닫혀있습니다.");
+            }
             serialPort1.WriteLine(msg);
         }
-        #endregion
+        private void StartRx()
+        {
+            serialPort1.DataReceived += (sender, e) =>
+            {
+                SerialPort port = (SerialPort)sender;
+                // 도착한 데이터 모두 읽기
+                string data = port.ReadExisting();
 
-        #region Rx
-
-        #endregion
-
-        #region Utile
-
+                RxTB.Text += data;
+            };
+        }
         #endregion
 
         #region Design
@@ -90,6 +115,50 @@ namespace SerialCommunication
                 CloseBtn.BackColor= Color.Red;
             }
         }
-        #endregion 
+        #endregion
+
+        #region Utile
+        private StopBits GetStopBits(object obj)
+        {
+            int value = int.Parse(obj.ToString());  
+            StopBits result;
+            if(value == 0)
+            {
+                result = StopBits.None;
+            }else if(value == 1)
+            {
+                result = StopBits.One;
+            }else if(value == 2)
+            {
+                result = ~StopBits.Two;
+            }else
+            {
+                result = StopBits.OnePointFive;
+            }
+            return result;
+        }
+        private Parity GetParity(object obj)
+        {
+            string value = obj.ToString();
+            Parity result;
+            if(value == "None")
+            {
+                result = Parity.None;
+            }else if(value == "Odd")
+            {
+                result = Parity.Odd;
+            }else if(value == "Even")
+            {
+                result = Parity.Even;
+            }else if(value == "Mark")
+            {
+                result = Parity.Mark;
+            }else
+            {
+                result = Parity.Space;
+            }
+            return result;
+        }
+        #endregion
     }
 }
