@@ -10,13 +10,19 @@ namespace Protocol_01
     {
         public const string SUCCESS = "ACK";
         public const string FAIL = "NCK";
+        public const string ERROR = "ERROR";
 
-        enum PICKER_ITEM
+        public enum PICKER_ITEM
         {
             P0, P1, P2, P3, P4, P5
         }
 
-        enum ROTATION_ITEM
+        public enum VISION_ITEM
+        {
+            ALL, GLASS, PCB
+        }
+
+        public enum ROTATION_ITEM
         {
             ROTATION1, ROTATION2, ROTATION3
         }
@@ -128,6 +134,14 @@ namespace Protocol_01
         public string PICKER { get; set; }
         public string VISION { get; set; }
         public string COMMAND { get; set; }
+
+        public Base(string pICKER, string vISION, string cOMMAND)
+        {
+            PICKER = pICKER;
+            VISION = vISION;
+            COMMAND = cOMMAND;
+        }
+
         public byte[] GetBytes()
         {
             string baseStr = PICKER + VISION + COMMAND;
@@ -143,6 +157,12 @@ namespace Protocol_01
     public class Data : ISerializable
     {
         public string innerData { get; set; }
+
+        public Data(string innerData)
+        {
+            this.innerData = innerData;
+        }
+
         public byte[] GetBytes()
         {
             return Encoding.UTF8.GetBytes(innerData);
@@ -157,6 +177,12 @@ namespace Protocol_01
     public class Error : ISerializable
     {
         public string innerData { get; set; }
+
+        public Error(string innerData)
+        {
+            this.innerData = innerData;
+        }
+
         public byte[] GetBytes()
         {
             return Encoding.UTF8.GetBytes(innerData);
@@ -170,9 +196,17 @@ namespace Protocol_01
 
     public class Value : ISerializable
     {
-        string X { get; set; }
-        string Y { get; set; }
-        string Z { get; set; }
+        public string X { get; set; }
+        public string Y { get; set; }
+        public string Z { get; set; }
+
+        public Value(string x, string y, string z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
         public byte[] GetBytes()
         {
             string valueStr = X + Y + Z;
