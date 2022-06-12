@@ -16,7 +16,7 @@ namespace Protocol_01
 
         // 수신 -> COMMAND분석 -> COM에 따른 처리 메소드호출 -> 응답할 메세지 반환
         // 각 COMMAND에 따른 ACK, NCK를 반환할 메소드를 매개변수로 받는다.
-        async public static void Receive(object o, Func<bool> startResult, Func<bool> endResult, Func<string, string, Value> requestResult, Func<string, string, bool> rotationResukt)
+        async public static void Receive(object o, Func<bool> startResult, Func<bool> endResult, Func<string, string, Value> requestResult, Func<string, string, bool> rotationResult, Action<string, string> writeLog)
         {
             TcpClient tc = (TcpClient)o;
 
@@ -38,36 +38,35 @@ namespace Protocol_01
                     // STX, ETX 가 잘못된경우 null을 반환
                     writeLog(respMsg.ToString(), "resp");
                 }
-                
-                msg.Substring(1, msg.Length); // STX, ETX 제거
-                string[] splitMsg = msg.Split(","); // ,로 프로토콜 요소 분리
-
-
-                // COMMAND 별로 각 메소드 호출해서 응답할 값을 받아온다.
-                // respMsg = StartResp();
-                switch (splitMsg[2].Substring(0,3))
+                else
                 {
-                    case "STA":
-                        respMsg = GetStartResp(splitMsg, startResult);
-                        break;
-                    case "END":
-                        respMsg = GetEndResp(splitMsg, endResult);
-                        break;
-                    case "REQ":
-                        respMsg = GetRequestResp(splitMsg, requestResult);
-                        break;
-                    case "ROT":
-                        respMsg = GetRotationResp(splitMsg, rotationResukt);
-                        break;
+                    string[] splitMsg = msg.Substring(1, msg.Length).Split(","); // STX, ETX 제거 맟 ','로 프로토콜 요소 분리
+
+                    // COMMAND 별로 각 메소드 호출해서 응답할 값을 받아온다.
+                    // respMsg = StartResp();
+                    switch (splitMsg[2].Substring(0, 3))
+                    {
+                        case "STA":
+                            respMsg = GetStartResp(splitMsg, startResult);
+                            break;
+                        case "END":
+                            respMsg = GetEndResp(splitMsg, endResult);
+                            break;
+                        case "REQ":
+                            respMsg = GetRequestResp(splitMsg, requestResult);
+                            break;
+                        case "ROT":
+                            respMsg = GetRotationResp(splitMsg, rotationResult);
+                            break;
+                    }
+
+                    // 보낼메세지 로그에 출력
+                    writeLog(respMsg.ToString(), "resp");
                 }
+
+                // 송신자에게 결과 메세지 응답
+                Send(stream, respMsg);
             }
-
-            // 보낼메세지 로그에 출력
-            writeLog(respMsg.ToString(), "resp");
-
-            // 송신자에게 결과 메세지 응답
-            Send(stream, respMsg);
-
             stream.Close();
         }
 
@@ -168,20 +167,6 @@ namespace Protocol_01
             }
 
             return msg;
-        }
-
-        // 받은메세지 rev, 보낼메세지 resp
-        public static void writeLog(string message, string flag)
-        {
-            // 받은 메시지, 보낼 메세지 구별해서 로그에 출력
-            if(flag == "rev")
-            {
-                // @@@구현해야함
-            }
-            else if(flag == "resp")
-            {
-                // @@@구현해야함
-            }
         }
     }
 }
