@@ -23,6 +23,8 @@ namespace Protocol_01_Client
         #region Form
         private void Client_Load(object sender, EventArgs e)
         {
+            // Form 실행과 동시에 Listener 동작
+            AsyncListener();
 
         }
         #endregion
