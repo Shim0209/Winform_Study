@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Protocol_01
 {
-    class MessageUtil
+    public class MessageUtil
     {
         async public static void Send(Stream stream, Message message)
         {
@@ -16,7 +16,11 @@ namespace Protocol_01
 
         // 수신 -> COMMAND분석 -> COM에 따른 처리 메소드호출 -> 응답할 메세지 반환
         // 각 COMMAND에 따른 ACK, NCK를 반환할 메소드를 매개변수로 받는다.
-        async public static void Receive(object o, Func<bool> startResult, Func<bool> endResult, Func<string, string, Value> requestResult, Func<string, string, bool> rotationResult, Action<string, string> writeLog)
+        async public static 
+        // 수신 -> COMMAND분석 -> COM에 따른 처리 메소드호출 -> 응답할 메세지 반환
+        // 각 COMMAND에 따른 ACK, NCK를 반환할 메소드를 매개변수로 받는다.
+        Task
+Receive(object o, Func<bool> startResult, Func<bool> endResult, Func<string, string, Value> requestResult, Func<string, string, bool> rotationResult, Action<string, string> writeLog)
         {
             TcpClient tc = (TcpClient)o;
 
@@ -68,6 +72,7 @@ namespace Protocol_01
                 Send(stream, respMsg);
             }
             stream.Close();
+            tc.Close();
         }
 
         public static Message GetStartResp(string[] message, Func<bool> startResult)
