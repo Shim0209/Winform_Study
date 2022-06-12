@@ -29,22 +29,22 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -73,6 +73,33 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Server [Vision]";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.textBox5);
+            this.groupBox2.Location = new System.Drawing.Point(6, 144);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(357, 297);
+            this.groupBox2.TabIndex = 17;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Log";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(6, 16);
+            this.textBox5.Multiline = true;
+            this.textBox5.Name = "textBox5";
+            this.textBox5.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox5.Size = new System.Drawing.Size(345, 275);
+            this.textBox5.TabIndex = 12;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(44, 115);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(82, 23);
+            this.comboBox2.TabIndex = 16;
+            // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
@@ -80,6 +107,15 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(82, 23);
             this.comboBox1.TabIndex = 14;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(18, 118);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(31, 15);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "Px : ";
             // 
             // label4
             // 
@@ -133,6 +169,14 @@
             this.button1.Text = "연결";
             this.button1.UseVisualStyleBackColor = true;
             // 
+            // textBox3
+            // 
+            this.textBox3.Enabled = false;
+            this.textBox3.Location = new System.Drawing.Point(6, 51);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(235, 23);
+            this.textBox3.TabIndex = 4;
+            // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(281, 21);
@@ -161,53 +205,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 25);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 15);
+            this.label1.Size = new System.Drawing.Size(63, 15);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Server IP : ";
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(44, 115);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(82, 23);
-            this.comboBox2.TabIndex = 16;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(18, 118);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(31, 15);
-            this.label5.TabIndex = 15;
-            this.label5.Text = "Px : ";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.textBox5);
-            this.groupBox2.Location = new System.Drawing.Point(6, 144);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(357, 297);
-            this.groupBox2.TabIndex = 17;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Log";
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(6, 16);
-            this.textBox5.Multiline = true;
-            this.textBox5.Name = "textBox5";
-            this.textBox5.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox5.Size = new System.Drawing.Size(345, 275);
-            this.textBox5.TabIndex = 12;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Enabled = false;
-            this.textBox3.Location = new System.Drawing.Point(6, 51);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(235, 23);
-            this.textBox3.TabIndex = 4;
+            this.label1.Text = "Client IP : ";
             // 
             // Server
             // 
