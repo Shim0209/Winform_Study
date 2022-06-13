@@ -10,11 +10,11 @@ namespace Protocol_01
     public class MessageUtil
     {
         // Test
-        public static Action a;
+        public static Action<string, string> WriteLog;
         public static void Send(Stream stream, Message message)
         {
             // 보낼메세지 로그에 출력
-            // writeLog(msg, "send");
+            WriteLog(message.ToString(), "send");
             stream.Write(message.GetBytes(), 0, message.GetBytes().Length);
 
             byte[] outbuf = new byte[1024];
@@ -22,7 +22,7 @@ namespace Protocol_01
             string output = Encoding.UTF8.GetString(outbuf, 0, outbuf.Length);
 
             // 응답받은 메세지 로그에 출력
-            // writeLog(msg, "result")
+            WriteLog(output, "result");
 
             stream.Close();
         }
@@ -48,12 +48,12 @@ namespace Protocol_01
                 msg = Encoding.UTF8.GetString(buff, 0, nbytes).Substring(1, msg.Length);
 
                 // 받은메세지 로그에 출력
-                //writeLog(msg, "rec");
+                WriteLog(msg, "rec");
 
                 if (msg.Substring(0) != "<" || msg.Substring(msg.Length, msg.Length + 1) != ">")
                 {
                     // STX, ETX 가 잘못된경우 null을 반환
-                    //writeLog(respMsg.ToString(), "resp");
+                    WriteLog(respMsg.ToString(), "resp");
                 }
                 else
                 {
@@ -78,7 +78,7 @@ namespace Protocol_01
                     }
 
                     // 보낼메세지 로그에 출력
-                    //writeLog(respMsg.ToString(), "resp");
+                    WriteLog(respMsg.ToString(), "resp");
                 }
 
                 // 송신자에게 결과 메세지 응답
@@ -229,7 +229,6 @@ namespace Protocol_01
             // 성공 true
 
             // Test
-            a.Invoke();
 
             // 실패 flase
             return true;
@@ -248,18 +247,5 @@ namespace Protocol_01
             // 실패 flase 
             return true;
         }
-
-        // 클래스에서 윈폼에 접근할 방법 찾아야함.
-        /*public void WriteLog(string message, string flag)
-        {
-            if (flag == "rec") // 받은 메세지
-            {
-                LogTB.Text = "받은메세지 : " + message;
-            }
-            else // 보낼 메세지
-            {
-                LogTB.Text = "응답한메세지 : " + message;
-            }
-        }*/
     }
 }

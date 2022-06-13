@@ -30,9 +30,8 @@ namespace Protocol_01_Client
             // Form 실행과 동시에 Listener 동작
             AsyncListener();
             Default_MyIP = GetLocalIP();
-            
-            // Test
-            MessageUtil.a += () => { };
+            // Log작성 메소드 등록
+            MessageUtil.WriteLog += WriteLog;
         }
         #endregion
 
@@ -193,7 +192,18 @@ namespace Protocol_01_Client
             return false;
         }
 
-
+        // MessageUtil.WriteLog Action에 넘겨줄 메소드
+        public void WriteLog(string message, string flag)
+        {
+            if (flag == "rec") // 받은 메세지
+            {
+                LogTB.Text = "받은메세지 : " + message;
+            }
+            else // 보낼 메세지
+            {
+                LogTB.Text = "응답한메세지 : " + message;
+            }
+        }
         #endregion
     }
 }
