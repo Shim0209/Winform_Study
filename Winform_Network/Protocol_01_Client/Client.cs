@@ -30,6 +30,9 @@ namespace Protocol_01_Client
             // Form 실행과 동시에 Listener 동작
             AsyncListener();
             Default_MyIP = GetLocalIP();
+            
+            // Test
+            MessageUtil.a += () => { };
         }
         #endregion
 

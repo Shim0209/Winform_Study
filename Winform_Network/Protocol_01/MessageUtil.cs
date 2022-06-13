@@ -9,6 +9,8 @@ namespace Protocol_01
 {
     public class MessageUtil
     {
+        // Test
+        public static Action a;
         public static void Send(Stream stream, Message message)
         {
             // 보낼메세지 로그에 출력
@@ -225,6 +227,9 @@ namespace Protocol_01
         public static bool EndResult()
         {
             // 성공 true
+
+            // Test
+            a.Invoke();
 
             // 실패 flase
             return true;
