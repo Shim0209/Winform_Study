@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Protocol01">
+      <HintPath>..\..\..\..\project\TcpIp2\Protocol01\bin\Debug\net6.0\Protocol01.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

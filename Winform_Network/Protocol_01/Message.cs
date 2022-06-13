@@ -36,8 +36,8 @@ namespace Protocol_01
 
     public class Message : ISerializable
     {
-        public string STX { get; set; }
-        public string ETX { get; set; }
+/*        public string STX { get; set; }
+        public string ETX { get; set; }*/
         public Base Base { get; set; }
         public Data? Data { get; set; }
         public Error? Error { get; set; }
@@ -73,35 +73,40 @@ namespace Protocol_01
 
             if (Value != null)
             {
-                Encoding.UTF8.GetBytes(STX).CopyTo(bytes, 0);
-                Base.GetBytes().CopyTo(bytes, STX.Length);
-                Data.GetBytes().CopyTo(bytes, STX.Length + Base.GetSize());
-                Value.GetBytes().CopyTo(bytes, STX.Length + Base.GetSize() + Data.GetSize());
-                Encoding.UTF8.GetBytes(ETX).CopyTo(bytes, STX.Length + Base.GetSize() + Data.GetSize() + Value.GetSize());
+                Encoding.UTF8.GetBytes("<").CopyTo(bytes, 0);
+                Base.GetBytes().CopyTo(bytes, "<".Length);
+                Encoding.UTF8.GetBytes(",").CopyTo(bytes, "<".Length + Base.GetSize());
+                Data.GetBytes().CopyTo(bytes, "<".Length + Base.GetSize() + ",".Length);
+                Encoding.UTF8.GetBytes(",").CopyTo(bytes, "<".Length + Base.GetSize() + ",".Length + Data.GetSize());
+                Value.GetBytes().CopyTo(bytes, "<".Length + Base.GetSize() + ",".Length + Data.GetSize() + ",".Length);
+                Encoding.UTF8.GetBytes(">").CopyTo(bytes, "<".Length + Base.GetSize() + ",".Length + Data.GetSize() + ",".Length + Value.GetSize());
                 return bytes;
             }
             else if (Error != null)
             {
-                Encoding.UTF8.GetBytes(STX).CopyTo(bytes, 0);
-                Base.GetBytes().CopyTo(bytes, STX.Length);
-                Data.GetBytes().CopyTo(bytes, STX.Length + Base.GetSize());
-                Error.GetBytes().CopyTo(bytes, STX.Length + Base.GetSize() + Data.GetSize());
-                Encoding.UTF8.GetBytes(ETX).CopyTo(bytes, STX.Length + Base.GetSize() + Data.GetSize() + Error.GetSize());
+                Encoding.UTF8.GetBytes("<").CopyTo(bytes, 0);
+                Base.GetBytes().CopyTo(bytes, "<".Length);
+                Encoding.UTF8.GetBytes(",").CopyTo(bytes, "<".Length + Base.GetSize());
+                Data.GetBytes().CopyTo(bytes, "<".Length + Base.GetSize() + ",".Length);
+                Encoding.UTF8.GetBytes(",").CopyTo(bytes, "<".Length + Base.GetSize() + ",".Length + Data.GetSize());
+                Error.GetBytes().CopyTo(bytes, "<".Length + Base.GetSize() + ",".Length + Data.GetSize() + ",".Length);
+                Encoding.UTF8.GetBytes(">").CopyTo(bytes, "<".Length + Base.GetSize() + ",".Length + Data.GetSize() + ",".Length + Error.GetSize());
                 return bytes;
             }
             else if (Data != null)
             {
-                Encoding.UTF8.GetBytes(STX).CopyTo(bytes, 0);
-                Base.GetBytes().CopyTo(bytes, STX.Length);
-                Data.GetBytes().CopyTo(bytes, STX.Length + Base.GetSize());
-                Encoding.UTF8.GetBytes(ETX).CopyTo(bytes, STX.Length + Base.GetSize() + Data.GetSize());
+                Encoding.UTF8.GetBytes("<").CopyTo(bytes, 0);
+                Base.GetBytes().CopyTo(bytes, "<".Length);
+                Encoding.UTF8.GetBytes(",").CopyTo(bytes, "<".Length + Base.GetSize());
+                Data.GetBytes().CopyTo(bytes, "<".Length + Base.GetSize() + ",".Length);
+                Encoding.UTF8.GetBytes(">").CopyTo(bytes, "<".Length + Base.GetSize() + ",".Length + Data.GetSize());
                 return bytes;
             }
             else
             {
-                Encoding.UTF8.GetBytes(STX).CopyTo(bytes, 0);
-                Base.GetBytes().CopyTo(bytes, STX.Length);
-                Encoding.UTF8.GetBytes(ETX).CopyTo(bytes, STX.Length + Base.GetSize());
+                Encoding.UTF8.GetBytes("<").CopyTo(bytes, 0);
+                Base.GetBytes().CopyTo(bytes, "<".Length);
+                Encoding.UTF8.GetBytes(">").CopyTo(bytes, "<".Length + Base.GetSize());
                 return bytes;
             }
         }
@@ -110,15 +115,15 @@ namespace Protocol_01
         {
             if(Value != null)
             {
-                return Base.GetSize() + Data.GetSize() + Value.GetSize();
+                return Base.GetSize() + ",".Length + Data.GetSize() + ",".Length + Value.GetSize();
             }
             else if(Error != null)
             {
-                return Base.GetSize() + Data.GetSize() + Error.GetSize();
+                return Base.GetSize() + ",".Length + Data.GetSize() + ",".Length + Error.GetSize();
             }
             else if(Data != null)
             {
-                return Base.GetSize() + Data.GetSize();
+                return Base.GetSize() + ",".Length + Data.GetSize();
             }
             else
             {
@@ -144,13 +149,13 @@ namespace Protocol_01
 
         public byte[] GetBytes()
         {
-            string baseStr = PICKER + VISION + COMMAND;
+            string baseStr = PICKER + "," + VISION + "," + COMMAND;
             return Encoding.UTF8.GetBytes(baseStr);
         }
 
         public int GetSize()
         {
-            return PICKER.Length + VISION.Length + COMMAND.Length;
+            return PICKER.Length + ",".Length + VISION.Length + ",".Length + COMMAND.Length;
         }
     }
 
@@ -209,13 +214,13 @@ namespace Protocol_01
 
         public byte[] GetBytes()
         {
-            string valueStr = X + Y + Z;
+            string valueStr = X + "," + Y + "," + Z;
             return Encoding.UTF8.GetBytes(valueStr);
         }
 
         public int GetSize()
         {
-            return X.Length + Y.Length + Z.Length;
+            return X.Length + ",".Length + Y.Length + ",".Length + Z.Length;
         }
     }
 }

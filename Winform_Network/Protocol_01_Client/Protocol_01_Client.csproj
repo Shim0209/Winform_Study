@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Protocol_01\Protocol_01.csproj" />
+    <ProjectReference Include="..\Protocol_01_Server\Protocol_01_Server.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Protocol_01">
       <HintPath>..\Protocol_01\bin\Debug\net6.0\Protocol_01.dll</HintPath>
     </Reference>

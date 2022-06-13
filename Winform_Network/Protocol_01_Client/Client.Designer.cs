@@ -45,12 +45,16 @@
             this.label2 = new System.Windows.Forms.Label();
             this.ServerIpTB = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.VisionCB = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.VisionCB);
+            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Controls.Add(this.PxCB);
             this.groupBox1.Controls.Add(this.label4);
@@ -95,15 +99,21 @@
             // PxCB
             // 
             this.PxCB.FormattingEnabled = true;
-            this.PxCB.Location = new System.Drawing.Point(281, 80);
+            this.PxCB.Items.AddRange(new object[] {
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5"});
+            this.PxCB.Location = new System.Drawing.Point(292, 80);
             this.PxCB.Name = "PxCB";
-            this.PxCB.Size = new System.Drawing.Size(82, 23);
+            this.PxCB.Size = new System.Drawing.Size(71, 23);
             this.PxCB.TabIndex = 14;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(255, 83);
+            this.label4.Location = new System.Drawing.Point(264, 83);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(31, 15);
             this.label4.TabIndex = 13;
@@ -117,6 +127,7 @@
             this.RequestBtn.TabIndex = 11;
             this.RequestBtn.Text = "REQUEST";
             this.RequestBtn.UseVisualStyleBackColor = true;
+            this.RequestBtn.Click += new System.EventHandler(this.RequestBtn_Click);
             // 
             // EndBtn
             // 
@@ -126,6 +137,7 @@
             this.EndBtn.TabIndex = 10;
             this.EndBtn.Text = "END";
             this.EndBtn.UseVisualStyleBackColor = true;
+            this.EndBtn.Click += new System.EventHandler(this.EndBtn_Click);
             // 
             // StartBtn
             // 
@@ -135,12 +147,13 @@
             this.StartBtn.TabIndex = 9;
             this.StartBtn.Text = "START\r\n";
             this.StartBtn.UseVisualStyleBackColor = true;
+            this.StartBtn.Click += new System.EventHandler(this.StartBtn_Click);
             // 
             // DataTB
             // 
             this.DataTB.Location = new System.Drawing.Point(43, 80);
             this.DataTB.Name = "DataTB";
-            this.DataTB.Size = new System.Drawing.Size(198, 23);
+            this.DataTB.Size = new System.Drawing.Size(89, 23);
             this.DataTB.TabIndex = 8;
             // 
             // label3
@@ -160,16 +173,18 @@
             this.CloseBtn.TabIndex = 6;
             this.CloseBtn.Text = "해제";
             this.CloseBtn.UseVisualStyleBackColor = true;
+            this.CloseBtn.Click += new System.EventHandler(this.CloseBtn_Click);
             // 
             // OpenBtn
             // 
-            this.OpenBtn.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.OpenBtn.BackColor = System.Drawing.SystemColors.Control;
             this.OpenBtn.Location = new System.Drawing.Point(247, 50);
             this.OpenBtn.Name = "OpenBtn";
             this.OpenBtn.Size = new System.Drawing.Size(55, 23);
             this.OpenBtn.TabIndex = 5;
             this.OpenBtn.Text = "연결";
             this.OpenBtn.UseVisualStyleBackColor = false;
+            this.OpenBtn.Click += new System.EventHandler(this.OpenBtn_Click);
             // 
             // IpPortInfoTB
             // 
@@ -211,6 +226,26 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Server IP : ";
             // 
+            // VisionCB
+            // 
+            this.VisionCB.FormattingEnabled = true;
+            this.VisionCB.Items.AddRange(new object[] {
+            "GLASS",
+            "PCB"});
+            this.VisionCB.Location = new System.Drawing.Point(189, 80);
+            this.VisionCB.Name = "VisionCB";
+            this.VisionCB.Size = new System.Drawing.Size(69, 23);
+            this.VisionCB.TabIndex = 17;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(136, 83);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(57, 15);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "VISION : ";
+            // 
             // Client
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -247,5 +282,7 @@
         private ComboBox PxCB;
         private GroupBox groupBox2;
         private TextBox IpPortInfoTB;
+        private ComboBox VisionCB;
+        private Label label5;
     }
 }
