@@ -28,13 +28,13 @@ namespace Protocol_01
         }
     }
 
-    public interface ISerializable 
+    /*public interface ISerializable 
     {
         byte[] GetBytes();
         int GetSize();
-    }
+    }*/
 
-    public class Message : ISerializable
+    public class Message // : ISerializable
     {
 /*        public string STX { get; set; }
         public string ETX { get; set; }*/
@@ -67,7 +67,27 @@ namespace Protocol_01
             Value = value;
         }
 
-        public byte[] GetBytes()
+        public override string? ToString()
+        {
+            if (Value != null)
+            {
+                return "<" + Base.ToString() + "," + Data.ToString() + "," + Value.ToString() + ">";
+            }
+            else if (Error != null)
+            {
+               return "<" + Base.ToString() + "," + Data.ToString() + "," + Error.ToString() + ">";
+            }
+            else if (Data != null)
+            {
+                return "<" + Base.ToString() + "," + Data.ToString() + ">";
+            }
+            else
+            {
+                return "<" + Base.ToString() + ">";
+            }
+        }
+
+        /*public byte[] GetBytes()
         {
             byte[] bytes = new byte[GetSize()];
 
@@ -109,30 +129,30 @@ namespace Protocol_01
                 Encoding.UTF8.GetBytes(">").CopyTo(bytes, "<".Length + Base.GetSize());
                 return bytes;
             }
-        }
+        }*/
 
         public int GetSize()
         {
-            if(Value != null)
+            if (Value != null)
             {
-                return Base.GetSize() + ",".Length + Data.GetSize() + ",".Length + Value.GetSize();
+                return "<".Length + Base.GetSize() + ",".Length + Data.GetSize() + ",".Length + Value.GetSize() + ">".Length;
             }
-            else if(Error != null)
+            else if (Error != null)
             {
-                return Base.GetSize() + ",".Length + Data.GetSize() + ",".Length + Error.GetSize();
+                return "<".Length + Base.GetSize() + ",".Length + Data.GetSize() + ",".Length + Error.GetSize() + ">".Length;
             }
-            else if(Data != null)
+            else if (Data != null)
             {
-                return Base.GetSize() + ",".Length + Data.GetSize();
+                return "<".Length + Base.GetSize() + ",".Length + Data.GetSize() + ">".Length;
             }
             else
             {
-                return Base.GetSize();
+                return "<".Length + Base.GetSize() + ">".Length;
             }
         }
     }
 
-    public class Base : ISerializable
+    public class Base //: ISerializable
     {
         // P0                   : 인터페이스
         // P1, P2, P3, P4, P5   : P 번호
@@ -147,11 +167,17 @@ namespace Protocol_01
             COMMAND = cOMMAND;
         }
 
-        public byte[] GetBytes()
+        public override string? ToString()
+        {
+            return PICKER + "," + VISION + "," + COMMAND;
+        }
+
+
+        /*public byte[] GetBytes()
         {
             string baseStr = PICKER + "," + VISION + "," + COMMAND;
             return Encoding.UTF8.GetBytes(baseStr);
-        }
+        }*/
 
         public int GetSize()
         {
@@ -159,7 +185,7 @@ namespace Protocol_01
         }
     }
 
-    public class Data : ISerializable
+    public class Data //: ISerializable
     {
         public string innerData { get; set; }
 
@@ -168,10 +194,15 @@ namespace Protocol_01
             this.innerData = innerData;
         }
 
-        public byte[] GetBytes()
+        public override string? ToString()
+        {
+            return innerData;
+        }
+
+        /*public byte[] GetBytes()
         {
             return Encoding.UTF8.GetBytes(innerData);
-        }
+        }*/
 
         public int GetSize()
         {
@@ -179,7 +210,7 @@ namespace Protocol_01
         }
     }
 
-    public class Error : ISerializable
+    public class Error //: ISerializable
     {
         public string innerData { get; set; }
 
@@ -188,10 +219,15 @@ namespace Protocol_01
             this.innerData = innerData;
         }
 
-        public byte[] GetBytes()
+        public override string? ToString()
+        {
+            return innerData;
+        }
+
+        /*public byte[] GetBytes()
         {
             return Encoding.UTF8.GetBytes(innerData);
-        }
+        }*/
 
         public int GetSize()
         {
@@ -199,7 +235,7 @@ namespace Protocol_01
         }
     }
 
-    public class Value : ISerializable
+    public class Value //: ISerializable
     {
         public string X { get; set; }
         public string Y { get; set; }
@@ -212,11 +248,16 @@ namespace Protocol_01
             Z = z;
         }
 
-        public byte[] GetBytes()
+        public override string? ToString()
+        {
+            return X + "," + Y + "," + Z;
+        }
+
+        /*public byte[] GetBytes()
         {
             string valueStr = X + "," + Y + "," + Z;
             return Encoding.UTF8.GetBytes(valueStr);
-        }
+        }*/
 
         public int GetSize()
         {

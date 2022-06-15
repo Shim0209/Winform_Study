@@ -30,20 +30,20 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.LogTB = new System.Windows.Forms.TextBox();
+            this.PxCB = new System.Windows.Forms.ComboBox();
+            this.RxCB = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.RotationBtn = new System.Windows.Forms.Button();
+            this.DataTB = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.CloseBtn = new System.Windows.Forms.Button();
+            this.OpenBtn = new System.Windows.Forms.Button();
+            this.IpPortInfoTB = new System.Windows.Forms.TextBox();
+            this.ClientPortTB = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.ClientIpTB = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -52,19 +52,19 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Controls.Add(this.comboBox2);
-            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Controls.Add(this.PxCB);
+            this.groupBox1.Controls.Add(this.RxCB);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.button5);
-            this.groupBox1.Controls.Add(this.textBox4);
+            this.groupBox1.Controls.Add(this.RotationBtn);
+            this.groupBox1.Controls.Add(this.DataTB);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.textBox3);
-            this.groupBox1.Controls.Add(this.textBox2);
+            this.groupBox1.Controls.Add(this.CloseBtn);
+            this.groupBox1.Controls.Add(this.OpenBtn);
+            this.groupBox1.Controls.Add(this.IpPortInfoTB);
+            this.groupBox1.Controls.Add(this.ClientPortTB);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.ClientIpTB);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(17, 12);
             this.groupBox1.Name = "groupBox1";
@@ -75,7 +75,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.textBox5);
+            this.groupBox2.Controls.Add(this.LogTB);
             this.groupBox2.Location = new System.Drawing.Point(6, 144);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(357, 297);
@@ -83,30 +83,40 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Log";
             // 
-            // textBox5
+            // LogTB
             // 
-            this.textBox5.Location = new System.Drawing.Point(6, 16);
-            this.textBox5.Multiline = true;
-            this.textBox5.Name = "textBox5";
-            this.textBox5.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox5.Size = new System.Drawing.Size(345, 275);
-            this.textBox5.TabIndex = 12;
+            this.LogTB.Location = new System.Drawing.Point(6, 16);
+            this.LogTB.Multiline = true;
+            this.LogTB.Name = "LogTB";
+            this.LogTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.LogTB.Size = new System.Drawing.Size(345, 275);
+            this.LogTB.TabIndex = 12;
             // 
-            // comboBox2
+            // PxCB
             // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(44, 115);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(82, 23);
-            this.comboBox2.TabIndex = 16;
+            this.PxCB.FormattingEnabled = true;
+            this.PxCB.Items.AddRange(new object[] {
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5"});
+            this.PxCB.Location = new System.Drawing.Point(44, 115);
+            this.PxCB.Name = "PxCB";
+            this.PxCB.Size = new System.Drawing.Size(82, 23);
+            this.PxCB.TabIndex = 16;
             // 
-            // comboBox1
+            // RxCB
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(158, 115);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(82, 23);
-            this.comboBox1.TabIndex = 14;
+            this.RxCB.FormattingEnabled = true;
+            this.RxCB.Items.AddRange(new object[] {
+            "ROTATION1",
+            "ROTATION2",
+            "ROTATION3"});
+            this.RxCB.Location = new System.Drawing.Point(158, 115);
+            this.RxCB.Name = "RxCB";
+            this.RxCB.Size = new System.Drawing.Size(82, 23);
+            this.RxCB.TabIndex = 14;
             // 
             // label5
             // 
@@ -126,21 +136,22 @@
             this.label4.TabIndex = 13;
             this.label4.Text = "Rx : ";
             // 
-            // button5
+            // RotationBtn
             // 
-            this.button5.Location = new System.Drawing.Point(252, 80);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(111, 58);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "REQUEST";
-            this.button5.UseVisualStyleBackColor = true;
+            this.RotationBtn.Location = new System.Drawing.Point(252, 80);
+            this.RotationBtn.Name = "RotationBtn";
+            this.RotationBtn.Size = new System.Drawing.Size(111, 58);
+            this.RotationBtn.TabIndex = 11;
+            this.RotationBtn.Text = "ROTATION";
+            this.RotationBtn.UseVisualStyleBackColor = true;
+            this.RotationBtn.Click += new System.EventHandler(this.RotationBtn_Click);
             // 
-            // textBox4
+            // DataTB
             // 
-            this.textBox4.Location = new System.Drawing.Point(43, 80);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(198, 23);
-            this.textBox4.TabIndex = 8;
+            this.DataTB.Location = new System.Drawing.Point(43, 80);
+            this.DataTB.Name = "DataTB";
+            this.DataTB.Size = new System.Drawing.Size(198, 23);
+            this.DataTB.TabIndex = 8;
             // 
             // label3
             // 
@@ -151,38 +162,40 @@
             this.label3.TabIndex = 7;
             this.label3.Text = "Data : ";
             // 
-            // button2
+            // CloseBtn
             // 
-            this.button2.Location = new System.Drawing.Point(308, 51);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(55, 23);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "해제";
-            this.button2.UseVisualStyleBackColor = true;
+            this.CloseBtn.Location = new System.Drawing.Point(308, 51);
+            this.CloseBtn.Name = "CloseBtn";
+            this.CloseBtn.Size = new System.Drawing.Size(55, 23);
+            this.CloseBtn.TabIndex = 6;
+            this.CloseBtn.Text = "해제";
+            this.CloseBtn.UseVisualStyleBackColor = true;
+            this.CloseBtn.Click += new System.EventHandler(this.CloseBtn_Click);
             // 
-            // button1
+            // OpenBtn
             // 
-            this.button1.Location = new System.Drawing.Point(247, 50);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(55, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "연결";
-            this.button1.UseVisualStyleBackColor = true;
+            this.OpenBtn.Location = new System.Drawing.Point(247, 50);
+            this.OpenBtn.Name = "OpenBtn";
+            this.OpenBtn.Size = new System.Drawing.Size(55, 23);
+            this.OpenBtn.TabIndex = 5;
+            this.OpenBtn.Text = "연결";
+            this.OpenBtn.UseVisualStyleBackColor = true;
+            this.OpenBtn.Click += new System.EventHandler(this.OpenBtn_Click);
             // 
-            // textBox3
+            // IpPortInfoTB
             // 
-            this.textBox3.Enabled = false;
-            this.textBox3.Location = new System.Drawing.Point(6, 51);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(235, 23);
-            this.textBox3.TabIndex = 4;
+            this.IpPortInfoTB.Enabled = false;
+            this.IpPortInfoTB.Location = new System.Drawing.Point(6, 51);
+            this.IpPortInfoTB.Name = "IpPortInfoTB";
+            this.IpPortInfoTB.Size = new System.Drawing.Size(235, 23);
+            this.IpPortInfoTB.TabIndex = 4;
             // 
-            // textBox2
+            // ClientPortTB
             // 
-            this.textBox2.Location = new System.Drawing.Point(281, 21);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(82, 23);
-            this.textBox2.TabIndex = 3;
+            this.ClientPortTB.Location = new System.Drawing.Point(281, 21);
+            this.ClientPortTB.Name = "ClientPortTB";
+            this.ClientPortTB.Size = new System.Drawing.Size(82, 23);
+            this.ClientPortTB.TabIndex = 3;
             // 
             // label2
             // 
@@ -193,12 +206,12 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Port : ";
             // 
-            // textBox1
+            // ClientIpTB
             // 
-            this.textBox1.Location = new System.Drawing.Point(67, 22);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(174, 23);
-            this.textBox1.TabIndex = 1;
+            this.ClientIpTB.Location = new System.Drawing.Point(67, 22);
+            this.ClientIpTB.Name = "ClientIpTB";
+            this.ClientIpTB.Size = new System.Drawing.Size(174, 23);
+            this.ClientIpTB.TabIndex = 1;
             // 
             // label1
             // 
@@ -217,6 +230,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "Server";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Server_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -228,21 +242,21 @@
         #endregion
 
         private GroupBox groupBox1;
-        private ComboBox comboBox1;
+        private ComboBox RxCB;
         private Label label4;
-        private Button button5;
-        private TextBox textBox4;
+        private Button RotationBtn;
+        private TextBox DataTB;
         private Label label3;
-        private Button button2;
-        private Button button1;
-        private TextBox textBox2;
+        private Button CloseBtn;
+        private Button OpenBtn;
+        private TextBox ClientPortTB;
         private Label label2;
-        private TextBox textBox1;
+        private TextBox ClientIpTB;
         private Label label1;
-        private ComboBox comboBox2;
+        private ComboBox PxCB;
         private Label label5;
         private GroupBox groupBox2;
-        private TextBox textBox5;
-        private TextBox textBox3;
+        private TextBox LogTB;
+        private TextBox IpPortInfoTB;
     }
 }

@@ -1,37 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Protocol_01
 {
     public class MessageUtil
     {
-        // Test
-        public static Action<string, string> WriteLog;
-        public static void Send(Stream stream, Message message)
+        #region Delegate
+        public delegate void WriteLogEvent(string msg, string flag);
+        public static event WriteLogEvent WriteLog;
+        #endregion
+
+        #region Send, Receive
+        public static void Send(TcpClient client, Message message)
         {
+            NetworkStream stream = client.GetStream();
             // 보낼메세지 로그에 출력
             WriteLog(message.ToString(), "send");
-            stream.Write(message.GetBytes(), 0, message.GetBytes().Length);
+            Debug.WriteLine("MessageUtil_Send()_1 : " + message.ToString() + message.GetSize());
+            
+            stream.Write(Encoding.UTF8.GetBytes(message.ToString()), 0, message.GetSize());
 
             byte[] outbuf = new byte[1024];
             int nbyte = stream.Read(outbuf, 0, outbuf.Length);
+            Debug.WriteLine("MessageUtil_Send()_2 : " + nbyte);
             string output = Encoding.UTF8.GetString(outbuf, 0, outbuf.Length);
-
+            Debug.WriteLine("MessageUtil_Send()_3 : " + output);
             // 응답받은 메세지 로그에 출력
             WriteLog(output, "result");
 
             stream.Close();
         }
-
-        // 수신 -> COMMAND분석 -> COM에 따른 처리 메소드호출 -> 응답할 메세지 반환
-        // 각 COMMAND에 따른 ACK, NCK를 반환할 메소드를 매개변수로 받는다.
-
-        // 수신 -> COMMAND분석 -> COM에 따른 처리 메소드호출 -> 응답할 메세지 반환
-        // 각 COMMAND에 따른 ACK, NCK를 반환할 메소드를 매개변수로 받는다.
         async public static void Receive(object o)
         {
             TcpClient tc = (TcpClient)o;
@@ -43,22 +42,32 @@ namespace Protocol_01
             Message respMsg = null;
             var buff = new byte[MAX_SIZE];
             var nbytes = await stream.ReadAsync(buff, 0, buff.Length).ConfigureAwait(false);
+            Debug.WriteLine("MessageUtil_Receive()_2 : " + nbytes);
             if (nbytes > 0)
             {
-                msg = Encoding.UTF8.GetString(buff, 0, nbytes).Substring(1, msg.Length);
-
+                Debug.WriteLine("MessageUtil_Receive()_3");
+                msg = Encoding.UTF8.GetString(buff, 0, nbytes);
+                Debug.WriteLine("MessageUtil_Receive()_4 : " + msg);
+                //msg.Substring(1, msg.Length);
+                Debug.WriteLine("MessageUtil_Receive()_5 : " + msg.Substring(msg.Length-1));
                 // 받은메세지 로그에 출력
-                WriteLog(msg, "rec");
 
-                if (msg.Substring(0) != "<" || msg.Substring(msg.Length, msg.Length + 1) != ">")
+                //WriteLog.Invoke(msg, "rec");
+
+                if (msg.Substring(0, 1) != "<" || msg.Substring(msg.Length - 1) != ">")
                 {
+                    Debug.WriteLine("MessageUtil_Receive()_6-1 : " + msg);
                     // STX, ETX 가 잘못된경우 null을 반환
-                    WriteLog(respMsg.ToString(), "resp");
+                    //WriteLog(respMsg.ToString(), "resp");
                 }
                 else
                 {
-                    string[] splitMsg = msg.Substring(1, msg.Length).Split(","); // STX, ETX 제거 맟 ','로 프로토콜 요소 분리
+                    Debug.WriteLine("MessageUtil_Receive()_6-2 : " + msg);
+                    
+                    string[] splitMsg = msg.Substring(1, msg.Length-2).Split(","); // STX, ETX 제거 맟 ','로 프로토콜 요소 분리
 
+                    foreach(string s in splitMsg)
+                        Debug.WriteLine("MessageUtil_Receive()_7 : " + s);
                     // COMMAND 별로 각 메소드 호출해서 응답할 값을 받아온다.
                     // respMsg = StartResp();
                     switch (splitMsg[2].Substring(0, 3))
@@ -66,7 +75,7 @@ namespace Protocol_01
                         case "STA":
                             respMsg = GetStartResp(splitMsg);
                             break;
-                        case "END":
+                        case "STO":
                             respMsg = GetEndResp(splitMsg);
                             break;
                         case "REQ":
@@ -76,19 +85,22 @@ namespace Protocol_01
                             respMsg = GetRotationResp(splitMsg);
                             break;
                     }
-
+                    Debug.WriteLine("MessageUtil_Receive()_8 : " + respMsg.ToString());
                     // 보낼메세지 로그에 출력
-                    WriteLog(respMsg.ToString(), "resp");
+                    //WriteLog(respMsg.ToString(), "resp");
                 }
-
+                Debug.WriteLine("MessageUtil_Receive()_9");
                 // 송신자에게 결과 메세지 응답
-                Send(stream, respMsg);
+                byte[] respMsgByte = Encoding.UTF8.GetBytes(respMsg.ToString());
+                stream.Write(respMsgByte, 0, respMsg.GetSize());
             }
+            Debug.WriteLine("MessageUtil_Receive()_10");
             stream.Close();
             tc.Close();
         }
+        #endregion
 
-        #region Send Message
+        #region Create Send Message
         public static Message GetStartMsg(string data)
         {
             Base startBase = new Base(CONSTANTS.PICKER_ITEM.P0.ToString(), CONSTANTS.VISION_ITEM.ALL.ToString(), "START");
@@ -107,13 +119,13 @@ namespace Protocol_01
         }
         public static Message GetRotationMsg(string pickerNo, string rotationNo, string data)
         {
-            Base rotationBase = new Base(pickerNo, CONSTANTS.VISION_ITEM.GLASS.ToString(), "ROTATION" + rotationNo);
+            Base rotationBase = new Base(pickerNo, CONSTANTS.VISION_ITEM.GLASS.ToString(), rotationNo);
             Data rotationData = new Data(data);
             return new Message(rotationBase, rotationData);
         }
         #endregion
 
-        #region Response Message
+        #region Create Response Message
         public static Message GetStartResp(string[] message)
         {
             Message msg;
@@ -123,7 +135,7 @@ namespace Protocol_01
             // Start 메시지 관련 로직
             // true 반환되면 ACK, false는 NCK
 
-            if (StartResult(message[2]) == true)
+            if (StartResult(message[3]) == true)
             {
                 // 1. ACK
                 startData = new Data(CONSTANTS.SUCCESS);
@@ -171,12 +183,9 @@ namespace Protocol_01
 
             string tempNo = message[0].Substring(1);
 
-            string pickerNo = Enum.GetName(typeof(CONSTANTS.PICKER_ITEM), "P" + tempNo);
-            string visionName = Enum.GetName(typeof(CONSTANTS.VISION_ITEM), message[1]);
-
             Value requestValue;
 
-            if ((requestValue = RequestResult(pickerNo, visionName)).X != "") // 값이 null이 아니면 ACK
+            if ((requestValue = RequestResult("P" + tempNo, message[1])).X != "") // 값이 null이 아니면 ACK
             {
                 requestData = new Data(CONSTANTS.SUCCESS);
                 msg = new Message(requestBase, requestData, requestValue);
@@ -199,9 +208,9 @@ namespace Protocol_01
             Data rotationData;
 
             string pickerNo = message[0].Substring(1);
-            string rotationNo = message[3].Substring(8);
+            string rotationNo = message[2].Substring(8);
 
-            if (RotationResult(pickerNo, rotationNo) == true)
+            if (RotationResult(pickerNo, rotationNo, message[3]) == true)
             {
                 rotationData = new Data(CONSTANTS.SUCCESS);
                 msg = new Message(rotationBase, rotationData);
@@ -217,10 +226,16 @@ namespace Protocol_01
         }
         #endregion
 
+        #region Logic(미구현)
         public static bool StartResult(string data)
         {
             // 성공 true
-
+            if (data == "error")
+            {
+                Debug.WriteLine("@@@@@@@@@ Error string check");
+                return false;
+            }
+            Debug.WriteLine("@########@ Error string check");
             // 실패 flase
             return true;
         }
@@ -238,14 +253,18 @@ namespace Protocol_01
             // 성공 x, y, z 에 값 넣기
 
             // 실패 x, y, z 모두 ""
-            return new Value("", "", "");
+            return new Value("234.231", "231.221", "122.743");
         }
-        public static bool RotationResult(string pickerNo, string rotationNo)
+        public static bool RotationResult(string pickerNo, string rotationNo, string data)
         {
             // 성공 true
-
+            if(data == "error")
+            {
+                return false;
+            }
             // 실패 flase 
             return true;
         }
+        #endregion
     }
 }

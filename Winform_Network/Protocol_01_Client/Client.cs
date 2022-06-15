@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,23 +14,23 @@ namespace Protocol_01_Client
         }
         #region Variable
         // sender
-        int Default_ServerPortNo;
-        string Default_ServerIP;
+        int ServerPortNo;
+        string ServerIP;
 
         // listener
         int Default_MyPortNo = 7000;
-        string Default_MyIP;
+        string MyIP;
 
-        // 
         TcpClient client;
+        bool IsConnected = false;
         #endregion
 
         #region Form
         private void Client_Load(object sender, EventArgs e)
         {
             // Form 실행과 동시에 Listener 동작
+            MyIP = GetLocalIP();
             AsyncListener();
-            Default_MyIP = GetLocalIP();
             // Log작성 메소드 등록
             MessageUtil.WriteLog += WriteLog;
         }
@@ -38,17 +39,17 @@ namespace Protocol_01_Client
         #region 이벤트
         private void OpenBtn_Click(object sender, EventArgs e)
         {
-            Default_ServerIP = ServerIpTB.Text.Length == 0 ? "" : ServerIpTB.Text;
-            Default_ServerPortNo = ServerPortTB.Text.Length == 0 ? 0 : int.Parse(ServerPortTB.Text);
+            ServerIP = ServerIpTB.Text.Length == 0 ? "" : ServerIpTB.Text;
+            ServerPortNo = ServerPortTB.Text.Length == 0 ? 0 : int.Parse(ServerPortTB.Text);
 
             if (checkServerIPPORT())
             {
                 try
                 {
-                    client = new TcpClient(Default_ServerIP, Default_ServerPortNo);
+                    client = new TcpClient(ServerIP, ServerPortNo);
                     ServerIpTB.Enabled = false;
                     ServerPortTB.Enabled = false;
-
+                    IsConnected = true;
                     MessageBox.Show("Server와 연결하였습니다.");
                 }
                 catch(Exception ex)
@@ -66,8 +67,7 @@ namespace Protocol_01_Client
         {
             client.Close();
 
-            Default_ServerIP = "";
-            Default_ServerPortNo = 0;
+            IsConnected = false;
 
             ServerIpTB.Enabled = true;
             ServerPortTB.Enabled = true;
@@ -77,71 +77,80 @@ namespace Protocol_01_Client
 
         private void StartBtn_Click(object sender, EventArgs e)
         {
-            if (client.Connected)
-            {
-                if(DataTB.Text != "")
-                {
-                    try
-                    {
-                        NetworkStream stream = client.GetStream();
-                        Protocol_01.Message message = MessageUtil.GetStartMsg(DataTB.Text);
-                        MessageUtil.Send(stream, message);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Data를 입력하세요.");
-                }
-            }
-            else
+            if (!IsConnected)
             {
                 MessageBox.Show("Server와의 연결을 확인하세요.");
+                return;
             }
-        }
 
-        private void EndBtn_Click(object sender, EventArgs e)
-        {
-            if (client.Connected)
+            if (!client.Connected)
+            {
+                client = new TcpClient(ServerIP, ServerPortNo);
+            }
+
+            if (DataTB.Text != "")
             {
                 try
                 {
-                    NetworkStream stream = client.GetStream();
-                    Protocol_01.Message message = MessageUtil.GetEndMsg();
-                    MessageUtil.Send(stream, message);
+                    Protocol_01.Message message = MessageUtil.GetStartMsg(DataTB.Text);
+                    MessageUtil.Send(client, message);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
                 }
             }
             else
             {
+                MessageBox.Show("Data를 입력하세요.");
+            }
+            
+        }
+
+        private void EndBtn_Click(object sender, EventArgs e)
+        {
+            if (!IsConnected)
+            {
                 MessageBox.Show("Server와의 연결을 확인하세요.");
+                return;
+            }
+
+            if (!client.Connected)
+            {
+                client = new TcpClient(ServerIP, ServerPortNo);
+            }
+            
+            try
+            {
+                Protocol_01.Message message = MessageUtil.GetEndMsg();
+                MessageUtil.Send(client, message);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 
         private void RequestBtn_Click(object sender, EventArgs e)
         {
-            if (client.Connected)
+            if (!IsConnected)
             {
-                if(PxCB.Text != "" && VisionCB.Text != "")
-                {
-                    NetworkStream stream = client.GetStream();
-                    Protocol_01.Message message = MessageUtil.GetRequestMsg(PxCB.Text, VisionCB.Text);
-                    MessageUtil.Send(stream, message);
-                }
-                else
-                {
-                    MessageBox.Show("Px와 VISION 값을 선택하세요.");
-                }
+                MessageBox.Show("Server와의 연결을 확인하세요.");
+                return;
+            }
+            if (!client.Connected)
+            {
+                client = new TcpClient(ServerIP, ServerPortNo);
+            }
+            
+            if(PxCB.Text != "" && VisionCB.Text != "")
+            {
+                Protocol_01.Message message = MessageUtil.GetRequestMsg(PxCB.Text, VisionCB.Text);
+                MessageUtil.Send(client, message);
             }
             else
             {
-                MessageBox.Show("Server와의 연결을 확인하세요.");
+                MessageBox.Show("Px와 VISION 값을 선택하세요.");
             }
         }
         #endregion
@@ -149,27 +158,23 @@ namespace Protocol_01_Client
         #region Listener
         async Task AsyncListener()
         {
-            TcpListener listener = new TcpListener(IPAddress.Parse(Default_MyIP), Default_MyPortNo);
+            Debug.WriteLine("Client_AsyncListener()_1");
+            TcpListener listener = new TcpListener(IPAddress.Parse(MyIP), Default_MyPortNo);
             listener.Start();
 
-            IpPortInfoTB.Text = $"{Default_MyIP}<{Default_MyPortNo}>를 열었습니다.";
+            IpPortInfoTB.Text = $"{MyIP}<{Default_MyPortNo}>를 열었습니다.";
 
             while (true)
             {
+                Debug.WriteLine("Client_AsyncListener()_2");
                 // 비동기 Accept
                 TcpClient tc = await listener.AcceptTcpClientAsync().ConfigureAwait(false);
-
+                Debug.WriteLine("Client_AsyncListener()_3");
                 // 처리는 MessageUtil의 Receive 메소드에서 함.
                 Task.Factory.StartNew(MessageUtil.Receive, tc);
+                
+                Debug.WriteLine("Client_AsyncListener()_4");
             }
-        }
-        #endregion
-
-        #region Sender
-        public void SendMsg(Protocol_01.Message message)
-        {
-            NetworkStream stream = client.GetStream();
-            MessageUtil.Send(stream, message);
         }
         #endregion
 
@@ -187,7 +192,7 @@ namespace Protocol_01_Client
         }
         private bool checkServerIPPORT()
         {
-            if (Default_ServerPortNo != 0 && Default_ServerIP != "")
+            if (ServerPortNo != 0 && ServerIP != "")
                 return true;
             return false;
         }
@@ -195,13 +200,28 @@ namespace Protocol_01_Client
         // MessageUtil.WriteLog Action에 넘겨줄 메소드
         public void WriteLog(string message, string flag)
         {
-            if (flag == "rec") // 받은 메세지
+            Debug.WriteLine("Client_WriteLog()_1 : " + message + " " + flag);
+            if (flag == "send") // 보낸 메세지 (송신)
             {
-                LogTB.Text = "받은메세지 : " + message;
+                Debug.WriteLine("Client_WriteLog()_2-1 : " + flag);
+                LogTB.Text += "송신 메세지 : " + message +"\r\n";
             }
-            else // 보낼 메세지
+            else if(flag == "result") // 응답받은 메세지 (송신 후 결과)
             {
-                LogTB.Text = "응답한메세지 : " + message;
+                Debug.WriteLine("Client_WriteLog()_2-2 : " + flag);
+                LogTB.Text += "송신 결과 메세지 : " + message + "\r\n";
+                LogTB.Text += Environment.NewLine;
+            }
+            else if(flag == "rec") // 받은 메세지 (수신)
+
+            {
+                Debug.WriteLine("Client_WriteLog()_2-2 : " + flag);
+                LogTB.Text += "수신 메세지 : " + message + "\r\n";
+            }
+            else // resp 응답한 메세지 (수신 후 응답)
+            {
+                Debug.WriteLine("Client_WriteLog()_2-2 : " + flag);
+                LogTB.Text += "수신 후 응답 메세지 : " + message +"\r\n";
             }
         }
         #endregion

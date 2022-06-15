@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.VisionCB = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.LogTB = new System.Windows.Forms.TextBox();
             this.PxCB = new System.Windows.Forms.ComboBox();
@@ -45,8 +47,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.ServerIpTB = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.VisionCB = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -76,6 +76,26 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Client [Machine]";
+            // 
+            // VisionCB
+            // 
+            this.VisionCB.FormattingEnabled = true;
+            this.VisionCB.Items.AddRange(new object[] {
+            "GLASS",
+            "PCB"});
+            this.VisionCB.Location = new System.Drawing.Point(189, 80);
+            this.VisionCB.Name = "VisionCB";
+            this.VisionCB.Size = new System.Drawing.Size(69, 23);
+            this.VisionCB.TabIndex = 17;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(136, 83);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(57, 15);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "VISION : ";
             // 
             // groupBox2
             // 
@@ -225,26 +245,6 @@
             this.label1.Size = new System.Drawing.Size(65, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Server IP : ";
-            // 
-            // VisionCB
-            // 
-            this.VisionCB.FormattingEnabled = true;
-            this.VisionCB.Items.AddRange(new object[] {
-            "GLASS",
-            "PCB"});
-            this.VisionCB.Location = new System.Drawing.Point(189, 80);
-            this.VisionCB.Name = "VisionCB";
-            this.VisionCB.Size = new System.Drawing.Size(69, 23);
-            this.VisionCB.TabIndex = 17;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(136, 83);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(57, 15);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "VISION : ";
             // 
             // Client
             // 
