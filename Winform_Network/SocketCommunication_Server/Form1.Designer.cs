@@ -41,6 +41,14 @@
             this.Tx_VisionCB = new System.Windows.Forms.ComboBox();
             this.Tx_PickerCB = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.Rx_Z_TB = new System.Windows.Forms.TextBox();
+            this.Rx_Y_TB = new System.Windows.Forms.TextBox();
+            this.Rx_X_TB = new System.Windows.Forms.TextBox();
+            this.Rx_CommandCB = new System.Windows.Forms.ComboBox();
             this.Rx_ReceiveTB = new System.Windows.Forms.TextBox();
             this.Rx_RespBtn = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
@@ -53,14 +61,6 @@
             this.Rx_VisionCB = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.Rx_CommandCB = new System.Windows.Forms.ComboBox();
-            this.Rx_X_TB = new System.Windows.Forms.TextBox();
-            this.Rx_Y_TB = new System.Windows.Forms.TextBox();
-            this.Rx_Z_TB = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -93,6 +93,7 @@
             this.Tx_SendBtn.TabIndex = 10;
             this.Tx_SendBtn.Text = "Send";
             this.Tx_SendBtn.UseVisualStyleBackColor = true;
+            this.Tx_SendBtn.Click += new System.EventHandler(this.Tx_SendBtn_Click);
             // 
             // Tx_ResultTB
             // 
@@ -224,6 +225,78 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rx";
             // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(21, 160);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(37, 12);
+            this.label15.TabIndex = 29;
+            this.label15.Text = "Value";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(275, 160);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(13, 12);
+            this.label14.TabIndex = 28;
+            this.label14.Text = "Z";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(175, 160);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(13, 12);
+            this.label13.TabIndex = 27;
+            this.label13.Text = "Y";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(76, 160);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(13, 12);
+            this.label12.TabIndex = 26;
+            this.label12.Text = "X";
+            // 
+            // Rx_Z_TB
+            // 
+            this.Rx_Z_TB.Location = new System.Drawing.Point(294, 155);
+            this.Rx_Z_TB.Name = "Rx_Z_TB";
+            this.Rx_Z_TB.Size = new System.Drawing.Size(73, 21);
+            this.Rx_Z_TB.TabIndex = 25;
+            // 
+            // Rx_Y_TB
+            // 
+            this.Rx_Y_TB.Location = new System.Drawing.Point(194, 155);
+            this.Rx_Y_TB.Name = "Rx_Y_TB";
+            this.Rx_Y_TB.Size = new System.Drawing.Size(73, 21);
+            this.Rx_Y_TB.TabIndex = 24;
+            // 
+            // Rx_X_TB
+            // 
+            this.Rx_X_TB.Location = new System.Drawing.Point(95, 155);
+            this.Rx_X_TB.Name = "Rx_X_TB";
+            this.Rx_X_TB.Size = new System.Drawing.Size(73, 21);
+            this.Rx_X_TB.TabIndex = 23;
+            // 
+            // Rx_CommandCB
+            // 
+            this.Rx_CommandCB.FormattingEnabled = true;
+            this.Rx_CommandCB.Items.AddRange(new object[] {
+            "START",
+            "STOP",
+            "REQUEST",
+            "ROTATION1",
+            "ROTATION2",
+            "ROTATION3"});
+            this.Rx_CommandCB.Location = new System.Drawing.Point(78, 102);
+            this.Rx_CommandCB.Name = "Rx_CommandCB";
+            this.Rx_CommandCB.Size = new System.Drawing.Size(208, 20);
+            this.Rx_CommandCB.TabIndex = 22;
+            // 
             // Rx_ReceiveTB
             // 
             this.Rx_ReceiveTB.Location = new System.Drawing.Point(78, 182);
@@ -339,78 +412,6 @@
             this.label10.Size = new System.Drawing.Size(40, 12);
             this.label10.TabIndex = 15;
             this.label10.Text = "Picker";
-            // 
-            // Rx_CommandCB
-            // 
-            this.Rx_CommandCB.FormattingEnabled = true;
-            this.Rx_CommandCB.Items.AddRange(new object[] {
-            "START",
-            "STOP",
-            "REQUEST",
-            "ROTATION1",
-            "ROTATION2",
-            "ROTATION3"});
-            this.Rx_CommandCB.Location = new System.Drawing.Point(78, 102);
-            this.Rx_CommandCB.Name = "Rx_CommandCB";
-            this.Rx_CommandCB.Size = new System.Drawing.Size(208, 20);
-            this.Rx_CommandCB.TabIndex = 22;
-            // 
-            // Rx_X_TB
-            // 
-            this.Rx_X_TB.Location = new System.Drawing.Point(95, 155);
-            this.Rx_X_TB.Name = "Rx_X_TB";
-            this.Rx_X_TB.Size = new System.Drawing.Size(73, 21);
-            this.Rx_X_TB.TabIndex = 23;
-            // 
-            // Rx_Y_TB
-            // 
-            this.Rx_Y_TB.Location = new System.Drawing.Point(194, 155);
-            this.Rx_Y_TB.Name = "Rx_Y_TB";
-            this.Rx_Y_TB.Size = new System.Drawing.Size(73, 21);
-            this.Rx_Y_TB.TabIndex = 24;
-            // 
-            // Rx_Z_TB
-            // 
-            this.Rx_Z_TB.Location = new System.Drawing.Point(294, 155);
-            this.Rx_Z_TB.Name = "Rx_Z_TB";
-            this.Rx_Z_TB.Size = new System.Drawing.Size(73, 21);
-            this.Rx_Z_TB.TabIndex = 25;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(76, 160);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(13, 12);
-            this.label12.TabIndex = 26;
-            this.label12.Text = "X";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(175, 160);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(13, 12);
-            this.label13.TabIndex = 27;
-            this.label13.Text = "Y";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(275, 160);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(13, 12);
-            this.label14.TabIndex = 28;
-            this.label14.Text = "Z";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(21, 160);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(37, 12);
-            this.label15.TabIndex = 29;
-            this.label15.Text = "Value";
             // 
             // VisionPC
             // 

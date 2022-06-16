@@ -309,6 +309,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "Machine";
             this.Text = "Machine";
+            this.Load += new System.EventHandler(this.Machine_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
