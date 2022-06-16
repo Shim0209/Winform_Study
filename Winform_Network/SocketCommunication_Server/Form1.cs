@@ -28,13 +28,16 @@ namespace SocketCommunication_Server
         {
             m_ClientSockets = new Queue<RespSet>();
             m_ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 7000);
+            IPAddress ServerIP = IPAddress.Parse(GetLocalIP());
+            IPEndPoint ipep = new IPEndPoint(ServerIP, 7000);
             m_ServerSocket.Bind(ipep);
             m_ServerSocket.Listen(100);
 
             SocketAsyncEventArgs args = new SocketAsyncEventArgs(); // 소켓이벤트
             args.Completed += new EventHandler<SocketAsyncEventArgs>(Accept_Completed); // 접속 이벤트 발생시 Accept_Completed 실행
             m_ServerSocket.AcceptAsync(args); // 접속 대기
+
+            MessageBox.Show($"{ServerIP}<7000>을 열었습니다.");
         }
 
         private void Accept_Completed(object sender, SocketAsyncEventArgs e)
@@ -156,6 +159,18 @@ namespace SocketCommunication_Server
             {
                 MessageBox.Show("응답할 요청이 없습니다.");
             }
+        }
+
+        private string GetLocalIP()
+        {
+            string localIP = string.Empty;
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                localIP = endPoint.Address.ToString();
+            }
+            return localIP;
         }
     }
 }
