@@ -31,7 +31,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Tx_SendBtn = new System.Windows.Forms.Button();
             this.Tx_ResultTB = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -51,7 +50,6 @@
             this.Rx_CommandCB = new System.Windows.Forms.ComboBox();
             this.Rx_ReceiveTB = new System.Windows.Forms.TextBox();
             this.Rx_RespBtn = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.Rx_MessageTB = new System.Windows.Forms.TextBox();
             this.Rx_DataCB = new System.Windows.Forms.ComboBox();
@@ -69,7 +67,6 @@
             // 
             this.groupBox1.Controls.Add(this.Tx_SendBtn);
             this.groupBox1.Controls.Add(this.Tx_ResultTB);
-            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
@@ -80,7 +77,7 @@
             this.groupBox1.Controls.Add(this.Tx_PickerCB);
             this.groupBox1.Location = new System.Drawing.Point(12, 16);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(380, 157);
+            this.groupBox1.Size = new System.Drawing.Size(380, 607);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tx";
@@ -97,19 +94,12 @@
             // 
             // Tx_ResultTB
             // 
-            this.Tx_ResultTB.Location = new System.Drawing.Point(78, 125);
+            this.Tx_ResultTB.Location = new System.Drawing.Point(10, 125);
+            this.Tx_ResultTB.Multiline = true;
             this.Tx_ResultTB.Name = "Tx_ResultTB";
-            this.Tx_ResultTB.Size = new System.Drawing.Size(289, 21);
+            this.Tx_ResultTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.Tx_ResultTB.Size = new System.Drawing.Size(357, 476);
             this.Tx_ResultTB.TabIndex = 9;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(18, 130);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(40, 12);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Result";
             // 
             // label4
             // 
@@ -208,7 +198,6 @@
             this.groupBox2.Controls.Add(this.Rx_CommandCB);
             this.groupBox2.Controls.Add(this.Rx_ReceiveTB);
             this.groupBox2.Controls.Add(this.Rx_RespBtn);
-            this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.Rx_MessageTB);
             this.groupBox2.Controls.Add(this.Rx_DataCB);
@@ -218,9 +207,9 @@
             this.groupBox2.Controls.Add(this.Rx_VisionCB);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label10);
-            this.groupBox2.Location = new System.Drawing.Point(12, 185);
+            this.groupBox2.Location = new System.Drawing.Point(414, 16);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(380, 213);
+            this.groupBox2.Size = new System.Drawing.Size(380, 607);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rx";
@@ -299,9 +288,11 @@
             // 
             // Rx_ReceiveTB
             // 
-            this.Rx_ReceiveTB.Location = new System.Drawing.Point(78, 182);
+            this.Rx_ReceiveTB.Location = new System.Drawing.Point(10, 182);
+            this.Rx_ReceiveTB.Multiline = true;
             this.Rx_ReceiveTB.Name = "Rx_ReceiveTB";
-            this.Rx_ReceiveTB.Size = new System.Drawing.Size(289, 21);
+            this.Rx_ReceiveTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.Rx_ReceiveTB.Size = new System.Drawing.Size(357, 419);
             this.Rx_ReceiveTB.TabIndex = 12;
             // 
             // Rx_RespBtn
@@ -313,15 +304,6 @@
             this.Rx_RespBtn.Text = "Resp";
             this.Rx_RespBtn.UseVisualStyleBackColor = true;
             this.Rx_RespBtn.Click += new System.EventHandler(this.Rx_RespBtn_Click);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(16, 185);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(50, 12);
-            this.label11.TabIndex = 11;
-            this.label11.Text = "Receive";
             // 
             // label9
             // 
@@ -417,7 +399,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(404, 408);
+            this.ClientSize = new System.Drawing.Size(808, 635);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "VisionPC";
@@ -436,7 +418,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button Tx_SendBtn;
         private System.Windows.Forms.TextBox Tx_ResultTB;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
@@ -448,7 +429,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox Rx_ReceiveTB;
         private System.Windows.Forms.Button Rx_RespBtn;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox Rx_MessageTB;
         private System.Windows.Forms.ComboBox Rx_DataCB;
