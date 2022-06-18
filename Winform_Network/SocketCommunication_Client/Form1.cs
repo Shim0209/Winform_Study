@@ -13,11 +13,6 @@ using System.Windows.Forms;
 
 namespace SocketCommunication_Client
 {
-    public struct RespSet
-    {
-        public string requestData;
-        public Socket requestSocket;
-    }
     public partial class Machine : Form
     {
         #region 초기화 및 속성, 델리게이트
@@ -31,8 +26,11 @@ namespace SocketCommunication_Client
         private Socket m_MachineSocket; // VisionPC에서 요청하는 데이터를 수신할 때 사용 (요청 수신용)
         private Socket m_ReceiveSocket; // VisionPC의 요청에 대한 결과를 응답할 때 사용 (요청 응답용)
         private byte[] buff; // 수신용 버퍼
-        private string receiveData; 
-
+        private string receiveData;
+        public Machine()
+        {
+            InitializeComponent();
+        }
         private void Machine_Load(object sender, EventArgs e)
         {
             m_MachineSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -51,11 +49,6 @@ namespace SocketCommunication_Client
             showMessage(Rx_ReceiveTB, $"{ServerIP}<7001>을 열었습니다.","");
         }
         #endregion
-
-        public Machine()
-        {
-            InitializeComponent();
-        }
 
         #region 수신
         private void Accept_Completed(object sender, SocketAsyncEventArgs e)
@@ -111,32 +104,56 @@ namespace SocketCommunication_Client
 
         private void Rx_RespBtn_Click(object sender, EventArgs e)
         {
-            string strData = receiveData;
-            strData.Replace("<", "").Replace(">", "");
-            string[] splitData = strData.Split(',');
-            string respData = "";
-
-            if (Rx_DataCB.Text == "ACK")
+            if(receiveData != null)
             {
-                //picker, vision, command, data
-                if (Rx_PickerCB.Text != "" && Rx_VisionCB.Text != "" && Rx_CommandCB.Text != "" && Rx_DataCB.Text != "")
-                {
-                    respData = "<" + Rx_PickerCB.Text + "," + Rx_VisionCB.Text + "," + Rx_CommandCB.Text + "," + Rx_DataCB.Text + ">";
-                }
-                
-            }
-            else // NCK
-            {
-                // picker, vision, command, data, message
-                if (Rx_PickerCB.Text != "" && Rx_VisionCB.Text != "" && Rx_CommandCB.Text != "" && Rx_DataCB.Text != "" && Rx_MessageTB.Text != "")
-                {
-                    respData = "<" + Rx_PickerCB.Text + "," + Rx_VisionCB.Text + "," + Rx_CommandCB.Text + "," + Rx_DataCB.Text + "," + Rx_MessageTB.Text + ">";
-                }
-            }
+                string strData = receiveData;
+                strData.Replace("<", "").Replace(">", "");
+                string[] splitData = strData.Split(',');
+                string respData = "";
+                bool errorFlag = false;
 
-            byte[] byteRespData = Encoding.Unicode.GetBytes(respData);
-            m_ReceiveSocket.Send(byteRespData, byteRespData.Length, SocketFlags.None);
-            showMessage(Rx_ReceiveTB, "응답한 데이터 : ", respData);
+                if (Rx_DataCB.Text == "ACK")
+                {
+                    //picker, vision, command, data
+                    if (Rx_PickerCB.Text != "" && Rx_VisionCB.Text != "" && Rx_CommandCB.Text != "" && Rx_DataCB.Text != "")
+                    {
+                        respData = "<" + Rx_PickerCB.Text + "," + Rx_VisionCB.Text + "," + Rx_CommandCB.Text + "," + Rx_DataCB.Text + ">";
+                    }
+                    else
+                    {
+                        errorFlag = true;
+                    }
+
+                }
+                else // NCK
+                {
+                    // picker, vision, command, data, message
+                    if (Rx_PickerCB.Text != "" && Rx_VisionCB.Text != "" && Rx_CommandCB.Text != "" && Rx_DataCB.Text != "" && Rx_MessageTB.Text != "")
+                    {
+                        respData = "<" + Rx_PickerCB.Text + "," + Rx_VisionCB.Text + "," + Rx_CommandCB.Text + "," + Rx_DataCB.Text + "," + Rx_MessageTB.Text + ">";
+                    }
+                    else
+                    {
+                        errorFlag = true;
+                    }
+                }
+
+                if (errorFlag)
+                {
+                    showMessage(Rx_ReceiveTB, "누락된 데이터가 있습니다.", "");
+                }
+                else
+                {
+                    byte[] byteRespData = Encoding.Unicode.GetBytes(respData);
+                    m_ReceiveSocket.Send(byteRespData, byteRespData.Length, SocketFlags.None);
+                    showMessage(Rx_ReceiveTB, "응답한 데이터 : ", respData);
+                }
+            }
+            else
+            {
+                showMessage(Rx_ReceiveTB, "응답할 요청이 없습니다.", "");
+            }
+            
         }
         #endregion
 
@@ -165,10 +182,9 @@ namespace SocketCommunication_Client
             showMessage(Tx_ResultTB, "서버 접속 대기 중...", "");
             try
             {
-                m_VisionPCSocket.BeginConnect(Machine_IP, Machine_Port, new AsyncCallback(ConnectCallBack), m_VisionPCSocket);
                 showMessage(Tx_ResultTB, "서버 접속 성공", "");
-            }
-            catch(SocketException e)
+                m_VisionPCSocket.BeginConnect(Machine_IP, Machine_Port, new AsyncCallback(ConnectCallBack), m_VisionPCSocket);
+            }catch(SocketException e)
             {
                 showMessage(Tx_ResultTB, "서버 접속 실패...", e.NativeErrorCode + "");
                 this.DoConnect();
@@ -187,7 +203,7 @@ namespace SocketCommunication_Client
                 cbSock.BeginReceive(this.recBuff, 0, this.recBuff.Length, SocketFlags.None, new AsyncCallback(OnReceiveCallBack), cbSock);
 
                 string tempData = CreateMessage();
-                this.BeginConnect();
+                this.BeginSend(tempData);
             }
             catch(SocketException e)
             {
@@ -232,11 +248,14 @@ namespace SocketCommunication_Client
         {
             try
             {
-                if (m_VisionPCSocket.Connected)
+                if (m_VisionPCSocket.Connected && message != "")
                 {
                     byte[] buffer = Encoding.Unicode.GetBytes(message);
 
                     m_VisionPCSocket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(SendCallBack), message);
+                }else
+                {
+                    showMessage(Tx_ResultTB, "데이터가 누락되었습니다.", "");
                 }
             }
             catch(SocketException e)
@@ -254,15 +273,15 @@ namespace SocketCommunication_Client
         private string CreateMessage()
         {
             string result = "";
-            if (GetComboBox(Tx_PickerCB) != null && GetComboBox(Tx_VisionCB) != null && GetComboBox(Tx_CommandCB) != null)
+            if (GetComboBox(Tx_PickerCB) != "" && GetComboBox(Tx_VisionCB) != "" && GetComboBox(Tx_CommandCB) != "")
             {
                 if (GetComboBox(Tx_CommandCB) == "START")
                 {
-                    if (GetTextBox(Tx_DataTB) != null)
+                    if (GetTextBox(Tx_DataTB) != "")
                         result = "<" + GetComboBox(Tx_PickerCB) + "," + GetComboBox(Tx_VisionCB) + "," + GetComboBox(Tx_CommandCB) + "," + GetTextBox(Tx_DataTB) + ">";
                     else
                     {
-                        showMessage(Tx_ResultTB, "메세지 데이터를 입력하세요", "");
+                        return "";
                     }
                 }
                 else
@@ -272,7 +291,7 @@ namespace SocketCommunication_Client
             }
             else
             {
-                showMessage(Tx_ResultTB, "메세지 데이터를 입력하세요.", "");
+                return "";
             }
             return result;
         }

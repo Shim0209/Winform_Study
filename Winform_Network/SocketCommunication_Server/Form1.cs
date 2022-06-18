@@ -115,46 +115,71 @@ namespace SocketCommunication_Server
         // Machine의 요청에 대한 응답을 보내는 클릭이벤트
         private void Rx_RespBtn_Click(object sender, EventArgs e)
         {
-            // 어떤 요청인지에 따라 폼 검사
-
-            string strData = receiveData;
-            strData.Replace("<", "").Replace(">", "");
-            string[] splitData = strData.Split(',');
-            string respData = "";
-
-            if (Rx_DataCB.Text == "ACK")
+            if(receiveData != null)
             {
-                if (splitData[2] == "REQUEST")
+                string strData = receiveData;
+                strData.Replace("<", "").Replace(">", "");
+                string[] splitData = strData.Split(',');
+                string respData = "";
+                bool errorFlag = false;
+
+                if (Rx_DataCB.Text == "ACK")
                 {
-                    //picker, vision, command, data, x, y, z
-                    if (Rx_PickerCB.Text != "" && Rx_VisionCB.Text != "" && Rx_CommandCB.Text != "" && Rx_DataCB.Text != "" && Rx_X_TB.Text != "" && Rx_Y_TB.Text != "" && Rx_Z_TB.Text != "")
+                    if (splitData[2] == "REQUEST")
                     {
-                        respData = "<" + Rx_PickerCB.Text + "," + Rx_VisionCB.Text + "," + Rx_CommandCB.Text + "," + Rx_DataCB.Text + "," + Rx_X_TB.Text + "," + Rx_Y_TB.Text + "," + Rx_Z_TB.Text + ">";
+                        //picker, vision, command, data, x, y, z
+                        if (Rx_PickerCB.Text != "" && Rx_VisionCB.Text != "" && Rx_CommandCB.Text != "" && Rx_DataCB.Text != "" && Rx_X_TB.Text != "" && Rx_Y_TB.Text != "" && Rx_Z_TB.Text != "")
+                        {
+                            respData = "<" + Rx_PickerCB.Text + "," + Rx_VisionCB.Text + "," + Rx_CommandCB.Text + "," + Rx_DataCB.Text + "," + Rx_X_TB.Text + "," + Rx_Y_TB.Text + "," + Rx_Z_TB.Text + ">";
+                        }
+                        else
+                        {
+                            errorFlag = true;
+                        }
                     }
+                    else
+                    {
+                        //picker, vision, command, data
+                        if (Rx_PickerCB.Text != "" && Rx_VisionCB.Text != "" && Rx_CommandCB.Text != "" && Rx_DataCB.Text != "")
+                        {
+                            respData = "<" + Rx_PickerCB.Text + "," + Rx_VisionCB.Text + "," + Rx_CommandCB.Text + "," + Rx_DataCB.Text + ">";
+                        }
+                        else
+                        {
+                            errorFlag = true;
+                        }
+                    }
+                }
+                else // NCK
+                {
+                    // picker, vision, command, data, message
+                    //picker, vision, command, data
+                    if (Rx_PickerCB.Text != "" && Rx_VisionCB.Text != "" && Rx_CommandCB.Text != "" && Rx_DataCB.Text != "" && Rx_MessageTB.Text != "")
+                    {
+                        respData = "<" + Rx_PickerCB.Text + "," + Rx_VisionCB.Text + "," + Rx_CommandCB.Text + "," + Rx_DataCB.Text + "," + Rx_MessageTB.Text + ">";
+                    }
+                    else
+                    {
+                        errorFlag = true;
+                    }
+                }
+
+                if (errorFlag)
+                {
+                    showMessage(Rx_ReceiveTB, "누락된 데이터가 있습니다.", "");
                 }
                 else
                 {
-                    //picker, vision, command, data
-                    if (Rx_PickerCB.Text != "" && Rx_VisionCB.Text != "" && Rx_CommandCB.Text != "" && Rx_DataCB.Text != "")
-                    {
-                        respData = "<" + Rx_PickerCB.Text + "," + Rx_VisionCB.Text + "," + Rx_CommandCB.Text + "," + Rx_DataCB.Text + ">";
-                    }
+                    // 전송
+                    byte[] byteRespData = Encoding.Unicode.GetBytes(respData);
+                    m_ReceiveSocket.Send(byteRespData, byteRespData.Length, SocketFlags.None);
+                    showMessage(Rx_ReceiveTB, "응답한 데이터 : ", respData);
                 }
             }
-            else // NCK
+            else
             {
-                // picker, vision, command, data, message
-                //picker, vision, command, data
-                if (Rx_PickerCB.Text != "" && Rx_VisionCB.Text != "" && Rx_CommandCB.Text != "" && Rx_DataCB.Text != "" && Rx_MessageTB.Text != "")
-                {
-                    respData = "<" + Rx_PickerCB.Text + "," + Rx_VisionCB.Text + "," + Rx_CommandCB.Text + "," + Rx_DataCB.Text + "," + Rx_MessageTB.Text + ">";
-                }
+                showMessage(Rx_ReceiveTB, "응답할 요청이 없습니다.", "");
             }
-
-            // 전송
-            byte[] byteRespData = Encoding.Unicode.GetBytes(respData);
-            m_ReceiveSocket.Send(byteRespData, byteRespData.Length, SocketFlags.None);
-            showMessage(Rx_ReceiveTB, "응답한 데이터 : ", respData);
 
             //m_ReceiveSocket.BeginSend(byteRespData, 0, byteRespData.Length, SocketFlags.None, new AsyncCallback(RespCallBack), respData);
         }
@@ -241,13 +266,13 @@ namespace SocketCommunication_Server
         private string CreateMessage()
         {
             string result = "";
-            if (GetComboBox(Tx_PickerCB) != null && GetComboBox(Tx_VisionCB) != null && GetComboBox(Tx_CommandCB) != null && GetTextBox(Tx_DataTB) != null)
+            if (GetComboBox(Tx_PickerCB) != "" && GetComboBox(Tx_VisionCB) != "" && GetComboBox(Tx_CommandCB) != "" && GetTextBox(Tx_DataTB) != "")
             {
                 result = "<" + GetComboBox(Tx_PickerCB) + "," + GetComboBox(Tx_VisionCB) + "," + GetComboBox(Tx_CommandCB) + "," + GetTextBox(Tx_DataTB) + ">";
             }
             else
             {
-                showMessage(Tx_ResultTB, "메세지 데이터를 입력하세요.", "");
+                result = "";
             }
             return result;
         }
@@ -258,12 +283,16 @@ namespace SocketCommunication_Server
         {
             try
             {
-                if (m_MachineSocket.Connected)
+                if (m_MachineSocket.Connected %% message != "")
                 {
                     byte[] buffer = Encoding.Unicode.GetBytes(message);
 
                     // 비동기 전송
                     m_MachineSocket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(SendCallBack), message);
+                }
+                else
+                {
+                    showMessage(Tx_ResultTB, "데이터가 누락되었습니다.", "");
                 }
             }
             catch (SocketException e)
