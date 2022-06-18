@@ -13,14 +13,17 @@ namespace SocketCommunication_Server
     public partial class VisionPC : Form
     {
         #region 초기화 및 속성, 델리게이트
+        // 송신
         private Socket m_MachineSocket; // Machine으로 요청할 때 사용 (요청용)
-        private Socket m_VisionPCSocket; // Machine에서 요청하는 데이터를 수신할 때 사용 (요청 수신용)
-        private Socket m_ReceiveSocket; // Machine의 요청에 대한 결과를 응답할 때 사용 (요청 응답용)
         private Socket cbSock; // Machine에게 요청 후 결과 데이터를 받을 때 사용 (결과값 수신용)
-        private byte[] buff; // 수신용 버퍼
         private byte[] recBuff; // 요청 후 받을 결과값용 버퍼
         private string VisionPC_IP = "";
-        private int VisionPC_Port = 7000;
+        private int VisionPC_Port = 7001;
+
+        // 수신
+        private Socket m_VisionPCSocket; // Machine에서 요청하는 데이터를 수신할 때 사용 (요청 수신용)
+        private Socket m_ReceiveSocket; // Machine의 요청에 대한 결과를 응답할 때 사용 (요청 응답용)
+        private byte[] buff; // 수신용 버퍼
         private string receiveData; // 받은 요청 데이터를 저장
 
         // 메인스레드에서 실행중인 Control에 다른 스레드가 접근시 에러발생 => 해결을 위한 델리게이트
@@ -33,7 +36,6 @@ namespace SocketCommunication_Server
 
         private void VisionPC_Load(object sender, EventArgs e)
         {
-            Debug.WriteLine("VisionPC_Load()");
             m_VisionPCSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             // @@@수정필요@@@ 테스트용 IP 할당 => 원래 VisionPC_IP는 따로 할당해줘야함.
             VisionPC_IP = GetLocalIP();
@@ -56,13 +58,12 @@ namespace SocketCommunication_Server
         // Machine의 연결요청 허락
         private void Accept_Completed(object sender, SocketAsyncEventArgs e)
         {
-            Debug.WriteLine("Accept_Completed()");
             Socket ClientSocket = e.AcceptSocket;
-            showMessage(Rx_ReceiveTB, "연결된 소켓 : ", ClientSocket.RemoteEndPoint.ToString());
             
             m_ReceiveSocket = ClientSocket;
             if (ClientSocket != null)
             {
+                showMessage(Rx_ReceiveTB, "연결된 소켓 : ", ClientSocket.RemoteEndPoint.ToString());
                 SocketAsyncEventArgs args = new SocketAsyncEventArgs();
                 buff = new byte[1024];
                 args.SetBuffer(buff, 0, buff.Length);
@@ -80,7 +81,6 @@ namespace SocketCommunication_Server
         // Machine의 요청 데이터 수신
         private void Receive_Completed(object sender, SocketAsyncEventArgs e)
         {
-            Debug.WriteLine("Receive_Completed()");
             Socket ClientSocket = (Socket)sender;
 
             if (ClientSocket.Connected && e.BytesTransferred > 0) // 소켓 접속 유무 확인 및 수신한 데이터 크기 체크
@@ -115,8 +115,6 @@ namespace SocketCommunication_Server
         // Machine의 요청에 대한 응답을 보내는 클릭이벤트
         private void Rx_RespBtn_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("Rx_RespBtn_Click()");
-
             // 어떤 요청인지에 따라 폼 검사
 
             string strData = receiveData;
@@ -173,7 +171,6 @@ namespace SocketCommunication_Server
         // Machine에게 요청하는 클릭이벤트
         private void Tx_SendBtn_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("Tx_SendBtn_Click()");
             recBuff = new byte[1024];
             // 서버연결
             this.DoConnect();
@@ -184,7 +181,6 @@ namespace SocketCommunication_Server
         {
             if (m_MachineSocket == null)
             {
-                Debug.WriteLine("DoConnect()");
                 m_MachineSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 this.BeginConnect();
             }
@@ -197,7 +193,6 @@ namespace SocketCommunication_Server
         // Machine과 소켓 연결
         public void BeginConnect()
         {
-            Debug.WriteLine("BeginConnect()");
             showMessage(Tx_ResultTB, "서버 접속 대기 중...", "");
             try
             {
@@ -217,7 +212,6 @@ namespace SocketCommunication_Server
         // 요청하기 위한 메세지 생성
         private void ConnectCallBack(IAsyncResult IAR)
         {
-            Debug.WriteLine("ConnectCallBack()");
             try
             {
                 // 보류중인 연결을 완성
@@ -247,21 +241,9 @@ namespace SocketCommunication_Server
         private string CreateMessage()
         {
             string result = "";
-            if (GetComboBox(Tx_PickerCB) != null && GetComboBox(Tx_VisionCB) != null && GetComboBox(Tx_CommandCB) != null)
+            if (GetComboBox(Tx_PickerCB) != null && GetComboBox(Tx_VisionCB) != null && GetComboBox(Tx_CommandCB) != null && GetTextBox(Tx_DataTB) != null)
             {
-                if (GetComboBox(Tx_CommandCB) == "START")
-                {
-                    if (GetTextBox(Tx_DataTB) != null)
-                       result = "<" + GetComboBox(Tx_PickerCB) + "," + GetComboBox(Tx_VisionCB) + "," + GetComboBox(Tx_CommandCB) + "," + GetTextBox(Tx_DataTB) + ">";
-                    else
-                    {
-                        showMessage(Tx_ResultTB, "메세지 데이터를 입력하세요", "");
-                    }
-                }
-                else
-                {
-                    result = "<" + GetComboBox(Tx_PickerCB) + "," + GetComboBox(Tx_VisionCB) + "," + GetComboBox(Tx_CommandCB) + ">";
-                }
+                result = "<" + GetComboBox(Tx_PickerCB) + "," + GetComboBox(Tx_VisionCB) + "," + GetComboBox(Tx_CommandCB) + "," + GetTextBox(Tx_DataTB) + ">";
             }
             else
             {
@@ -274,7 +256,6 @@ namespace SocketCommunication_Server
 
         public void BeginSend(string message)
         {
-            Debug.WriteLine("BeginSend()");
             try
             {
                 if (m_MachineSocket.Connected)
@@ -293,7 +274,6 @@ namespace SocketCommunication_Server
 
         private void SendCallBack(IAsyncResult IAR)
         {
-            Debug.WriteLine("SendCallBack()");
             string message = (string)IAR.AsyncState;
             showMessage(Tx_ResultTB, "전송한 데이터 : ", message);
         }
@@ -307,7 +287,6 @@ namespace SocketCommunication_Server
         // 수신이벤트
         private void OnReceiveCallBack(IAsyncResult IAR)
         {
-            Debug.WriteLine("OnReceiveCallBack()");
             try
             {
                 Socket tempSocket = (Socket)IAR.AsyncState;
@@ -336,7 +315,6 @@ namespace SocketCommunication_Server
         // 로컬 아이피 주소 가져오기
         private string GetLocalIP()
         {
-            Debug.WriteLine("GetLocalIP()");
             string localIP = string.Empty;
             using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
             {
@@ -350,7 +328,6 @@ namespace SocketCommunication_Server
         #region 크로스 스레드 방지 메소드
         private void showMessage(TextBox textBox, string message, string netMessage)
         {
-            Debug.WriteLine("showMessage() : " + message);
             if (textBox.InvokeRequired)
             {
                 //textBox.Invoke(new ctrl_Invoke(showMessage), textBox, message, netMessage);

@@ -148,9 +148,6 @@
             // 
             this.Tx_CommandCB.FormattingEnabled = true;
             this.Tx_CommandCB.Items.AddRange(new object[] {
-            "START",
-            "STOP",
-            "REQUEST",
             "ROTATION1",
             "ROTATION2",
             "ROTATION3"});
@@ -163,19 +160,17 @@
             // 
             this.Tx_VisionCB.FormattingEnabled = true;
             this.Tx_VisionCB.Items.AddRange(new object[] {
-            "ALL",
-            "GLASS",
-            "PCB"});
+            "GLASS"});
             this.Tx_VisionCB.Location = new System.Drawing.Point(78, 46);
             this.Tx_VisionCB.Name = "Tx_VisionCB";
             this.Tx_VisionCB.Size = new System.Drawing.Size(208, 20);
             this.Tx_VisionCB.TabIndex = 1;
+            this.Tx_VisionCB.Text = "GLASS";
             // 
             // Tx_PickerCB
             // 
             this.Tx_PickerCB.FormattingEnabled = true;
             this.Tx_PickerCB.Items.AddRange(new object[] {
-            "P0",
             "P1",
             "P2",
             "P3",
@@ -277,10 +272,7 @@
             this.Rx_CommandCB.Items.AddRange(new object[] {
             "START",
             "STOP",
-            "REQUEST",
-            "ROTATION1",
-            "ROTATION2",
-            "ROTATION3"});
+            "REQUEST"});
             this.Rx_CommandCB.Location = new System.Drawing.Point(78, 102);
             this.Rx_CommandCB.Name = "Rx_CommandCB";
             this.Rx_CommandCB.Size = new System.Drawing.Size(208, 20);
@@ -320,6 +312,7 @@
             this.Rx_MessageTB.Name = "Rx_MessageTB";
             this.Rx_MessageTB.Size = new System.Drawing.Size(208, 21);
             this.Rx_MessageTB.TabIndex = 20;
+            this.Rx_MessageTB.Text = "ERROR";
             // 
             // Rx_DataCB
             // 
@@ -399,7 +392,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(808, 635);
+            this.ClientSize = new System.Drawing.Size(808, 627);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "VisionPC";
