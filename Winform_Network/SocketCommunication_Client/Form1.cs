@@ -104,6 +104,7 @@ namespace SocketCommunication_Client
                                 clientInfo.message = sb.ToString();
                                 m_clientInfo.Enqueue(clientInfo);
 
+                                Rx_BoxDataWrite();
                                 Rx_RequestMsgWrite();
 
                                 sb.Clear();
@@ -132,7 +133,7 @@ namespace SocketCommunication_Client
                 Socket currentSocket = clientInfo.socket;
                 string message = clientInfo.message;
 
-                message.Replace("<", "").Replace(">", "");
+                message = message.Replace("<", "").Replace(">", "");
                 string[] splitData = message.Split(',');
 
                 string respData = "";
@@ -176,6 +177,7 @@ namespace SocketCommunication_Client
 
                     m_clientInfo.Dequeue();
 
+                    Rx_BoxDataWrite();
                     Rx_RequestMsgWrite();
                 }
             }
@@ -208,6 +210,27 @@ namespace SocketCommunication_Client
             else
             {
                 Rx_RequestMsgTB.Text = "응답할 메세지가 없습니다.";
+            }
+        }
+        private void Rx_BoxDataWrite()
+        {
+            if (m_clientInfo.Count > 0)
+            {
+                ClientInfo current = m_clientInfo.Peek();
+
+                string message = current.message;
+                message = message.Replace("<", "").Replace(">", "");
+                string[] splitData = message.Split(',');
+
+                SetComboBox(Rx_PickerCB, splitData[0]);
+                SetComboBox(Rx_VisionCB, splitData[1]);
+                SetComboBox(Rx_CommandCB, splitData[2]);
+            }
+            else
+            {
+                SetComboBox(Rx_PickerCB, "");
+                SetComboBox(Rx_VisionCB, "");
+                SetComboBox(Rx_CommandCB, "");
             }
         }
         #endregion
@@ -393,8 +416,36 @@ namespace SocketCommunication_Client
             }
             return result;
         }
+        public void SetTextBox(TextBox tb, string data)
+        {
+            if (tb.InvokeRequired)
+            {
+                tb.Invoke(new MethodInvoker(delegate ()
+                {
+                    tb.Text = data;
+                }));
+            }
+            else
+            {
+                tb.Text = data;
+            }
+        }
+        public void SetComboBox(ComboBox cb, string data)
+        {
+            if (cb.InvokeRequired)
+            {
+                cb.Invoke(new MethodInvoker(delegate ()
+                {
+                    cb.Text = data;
+                }));
+            }
+            else
+            {
+                cb.Text = data;
+            }
+        }
         #endregion
 
-        
+
     }
 }

@@ -41,6 +41,8 @@
             this.Tx_VisionCB = new System.Windows.Forms.ComboBox();
             this.Tx_PickerCB = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.Rx_RequestMsgTB = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -60,8 +62,6 @@
             this.Rx_VisionCB = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.Rx_RequestMsgTB = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -81,14 +81,14 @@
             this.groupBox1.Controls.Add(this.Tx_PickerCB);
             this.groupBox1.Location = new System.Drawing.Point(12, 16);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(380, 646);
+            this.groupBox1.Size = new System.Drawing.Size(475, 646);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tx";
             // 
             // Tx_SendBtn
             // 
-            this.Tx_SendBtn.Location = new System.Drawing.Point(294, 54);
+            this.Tx_SendBtn.Location = new System.Drawing.Point(387, 54);
             this.Tx_SendBtn.Name = "Tx_SendBtn";
             this.Tx_SendBtn.Size = new System.Drawing.Size(75, 101);
             this.Tx_SendBtn.TabIndex = 10;
@@ -100,7 +100,7 @@
             // 
             this.Tx_OpenBtn.Location = new System.Drawing.Point(12, 13);
             this.Tx_OpenBtn.Name = "Tx_OpenBtn";
-            this.Tx_OpenBtn.Size = new System.Drawing.Size(357, 38);
+            this.Tx_OpenBtn.Size = new System.Drawing.Size(450, 38);
             this.Tx_OpenBtn.TabIndex = 13;
             this.Tx_OpenBtn.Text = "연결";
             this.Tx_OpenBtn.UseVisualStyleBackColor = true;
@@ -112,7 +112,7 @@
             this.Tx_ResultTB.Multiline = true;
             this.Tx_ResultTB.Name = "Tx_ResultTB";
             this.Tx_ResultTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.Tx_ResultTB.Size = new System.Drawing.Size(357, 476);
+            this.Tx_ResultTB.Size = new System.Drawing.Size(450, 476);
             this.Tx_ResultTB.TabIndex = 9;
             // 
             // label4
@@ -155,7 +155,7 @@
             // 
             this.Tx_DataTB.Location = new System.Drawing.Point(80, 134);
             this.Tx_DataTB.Name = "Tx_DataTB";
-            this.Tx_DataTB.Size = new System.Drawing.Size(208, 21);
+            this.Tx_DataTB.Size = new System.Drawing.Size(301, 21);
             this.Tx_DataTB.TabIndex = 3;
             // 
             // Tx_CommandCB
@@ -167,7 +167,7 @@
             "ROTATION3"});
             this.Tx_CommandCB.Location = new System.Drawing.Point(80, 108);
             this.Tx_CommandCB.Name = "Tx_CommandCB";
-            this.Tx_CommandCB.Size = new System.Drawing.Size(208, 20);
+            this.Tx_CommandCB.Size = new System.Drawing.Size(301, 20);
             this.Tx_CommandCB.TabIndex = 2;
             // 
             // Tx_VisionCB
@@ -177,7 +177,7 @@
             "GLASS"});
             this.Tx_VisionCB.Location = new System.Drawing.Point(80, 82);
             this.Tx_VisionCB.Name = "Tx_VisionCB";
-            this.Tx_VisionCB.Size = new System.Drawing.Size(208, 20);
+            this.Tx_VisionCB.Size = new System.Drawing.Size(301, 20);
             this.Tx_VisionCB.TabIndex = 1;
             this.Tx_VisionCB.Text = "GLASS";
             // 
@@ -192,7 +192,7 @@
             "P5"});
             this.Tx_PickerCB.Location = new System.Drawing.Point(80, 56);
             this.Tx_PickerCB.Name = "Tx_PickerCB";
-            this.Tx_PickerCB.Size = new System.Drawing.Size(208, 20);
+            this.Tx_PickerCB.Size = new System.Drawing.Size(301, 20);
             this.Tx_PickerCB.TabIndex = 0;
             // 
             // groupBox2
@@ -218,12 +218,31 @@
             this.groupBox2.Controls.Add(this.Rx_VisionCB);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label10);
-            this.groupBox2.Location = new System.Drawing.Point(414, 16);
+            this.groupBox2.Location = new System.Drawing.Point(505, 7);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(380, 646);
+            this.groupBox2.Size = new System.Drawing.Size(467, 646);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rx";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(58, 12);
+            this.label5.TabIndex = 31;
+            this.label5.Text = "Message";
+            // 
+            // Rx_RequestMsgTB
+            // 
+            this.Rx_RequestMsgTB.Font = new System.Drawing.Font("굴림", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.Rx_RequestMsgTB.Location = new System.Drawing.Point(78, 13);
+            this.Rx_RequestMsgTB.Multiline = true;
+            this.Rx_RequestMsgTB.Name = "Rx_RequestMsgTB";
+            this.Rx_RequestMsgTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.Rx_RequestMsgTB.Size = new System.Drawing.Size(382, 38);
+            this.Rx_RequestMsgTB.TabIndex = 30;
             // 
             // label15
             // 
@@ -291,7 +310,7 @@
             "REQUEST"});
             this.Rx_CommandCB.Location = new System.Drawing.Point(78, 136);
             this.Rx_CommandCB.Name = "Rx_CommandCB";
-            this.Rx_CommandCB.Size = new System.Drawing.Size(208, 20);
+            this.Rx_CommandCB.Size = new System.Drawing.Size(301, 20);
             this.Rx_CommandCB.TabIndex = 22;
             // 
             // Rx_ReceiveTB
@@ -300,12 +319,12 @@
             this.Rx_ReceiveTB.Multiline = true;
             this.Rx_ReceiveTB.Name = "Rx_ReceiveTB";
             this.Rx_ReceiveTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.Rx_ReceiveTB.Size = new System.Drawing.Size(357, 419);
+            this.Rx_ReceiveTB.Size = new System.Drawing.Size(450, 419);
             this.Rx_ReceiveTB.TabIndex = 12;
             // 
             // Rx_RespBtn
             // 
-            this.Rx_RespBtn.Location = new System.Drawing.Point(292, 55);
+            this.Rx_RespBtn.Location = new System.Drawing.Point(385, 55);
             this.Rx_RespBtn.Name = "Rx_RespBtn";
             this.Rx_RespBtn.Size = new System.Drawing.Size(75, 128);
             this.Rx_RespBtn.TabIndex = 21;
@@ -326,7 +345,7 @@
             // 
             this.Rx_MessageTB.Location = new System.Drawing.Point(78, 162);
             this.Rx_MessageTB.Name = "Rx_MessageTB";
-            this.Rx_MessageTB.Size = new System.Drawing.Size(208, 21);
+            this.Rx_MessageTB.Size = new System.Drawing.Size(301, 21);
             this.Rx_MessageTB.TabIndex = 20;
             this.Rx_MessageTB.Text = "ERROR";
             // 
@@ -338,7 +357,7 @@
             "NCK"});
             this.Rx_DataCB.Location = new System.Drawing.Point(78, 57);
             this.Rx_DataCB.Name = "Rx_DataCB";
-            this.Rx_DataCB.Size = new System.Drawing.Size(208, 20);
+            this.Rx_DataCB.Size = new System.Drawing.Size(301, 20);
             this.Rx_DataCB.TabIndex = 11;
             // 
             // label6
@@ -362,7 +381,7 @@
             "P5"});
             this.Rx_PickerCB.Location = new System.Drawing.Point(78, 83);
             this.Rx_PickerCB.Name = "Rx_PickerCB";
-            this.Rx_PickerCB.Size = new System.Drawing.Size(208, 20);
+            this.Rx_PickerCB.Size = new System.Drawing.Size(301, 20);
             this.Rx_PickerCB.TabIndex = 12;
             // 
             // label7
@@ -383,7 +402,7 @@
             "PCB"});
             this.Rx_VisionCB.Location = new System.Drawing.Point(78, 109);
             this.Rx_VisionCB.Name = "Rx_VisionCB";
-            this.Rx_VisionCB.Size = new System.Drawing.Size(208, 20);
+            this.Rx_VisionCB.Size = new System.Drawing.Size(301, 20);
             this.Rx_VisionCB.TabIndex = 13;
             // 
             // label8
@@ -404,30 +423,11 @@
             this.label10.TabIndex = 15;
             this.label10.Text = "Picker";
             // 
-            // Rx_RequestMsgTB
-            // 
-            this.Rx_RequestMsgTB.Font = new System.Drawing.Font("굴림", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.Rx_RequestMsgTB.Location = new System.Drawing.Point(78, 13);
-            this.Rx_RequestMsgTB.Multiline = true;
-            this.Rx_RequestMsgTB.Name = "Rx_RequestMsgTB";
-            this.Rx_RequestMsgTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.Rx_RequestMsgTB.Size = new System.Drawing.Size(289, 38);
-            this.Rx_RequestMsgTB.TabIndex = 30;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 28);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(58, 12);
-            this.label5.TabIndex = 31;
-            this.label5.Text = "Message";
-            // 
             // VisionPC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(808, 674);
+            this.ClientSize = new System.Drawing.Size(984, 674);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "VisionPC";
