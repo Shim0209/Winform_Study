@@ -129,7 +129,7 @@ namespace SocketCommunication_Server
         {
             if(m_clientInfo.Count > 0)
             {
-                ClientInfo clientInfo = m_clientInfo.Dequeue();
+                ClientInfo clientInfo = m_clientInfo.Peek();
                 Socket currentSocket = clientInfo.socket;
                 string message = clientInfo.message;
 
@@ -190,6 +190,8 @@ namespace SocketCommunication_Server
                     byte[] byteRespData = Encoding.Unicode.GetBytes(respData);
                     currentSocket.Send(byteRespData, byteRespData.Length, SocketFlags.None);
                     showMessage(Rx_ReceiveTB, $"응답한 데이터 {respData}", $"응답 시간{DateTime.Now}");
+
+                    m_clientInfo.Dequeue();
 
                     Rx_RequestMsgWrite();
                 }
