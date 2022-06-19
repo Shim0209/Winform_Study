@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,102 +8,133 @@ using System.Windows.Forms;
 
 namespace SocketCommunication_Client
 {
+    public struct ClientInfo
+    {
+        public string message;
+        public Socket socket;
+
+        public ClientInfo(string message, Socket socket)
+        {
+            this.message = message;
+            this.socket = socket;
+        }
+    }
     public partial class Machine : Form
     {
-        #region 초기화 및 속성, 델리게이트
+        #region 속성 초기화
+        // Queue
+        private Queue<ClientInfo> m_clientInfo;
+
         // 송신
         private Socket m_VisionPCSocket; // VisionPC로 요청할 때 사용 (요청용)
-        private Socket cbSock; // VisionPC에게 요청 후 결과 데이터를 받을 때 사용 (결과값 수신용)
-        private byte[] recBuff; // 요청 후 받을 결과값용 버퍼
         private string Machine_IP = "";
-        private int Machine_Port = 7000;
+
         // 수신
         private Socket m_MachineSocket; // VisionPC에서 요청하는 데이터를 수신할 때 사용 (요청 수신용)
-        private Socket m_ReceiveSocket; // VisionPC의 요청에 대한 결과를 응답할 때 사용 (요청 응답용)
-        private byte[] buff; // 수신용 버퍼
-        private string receiveData;
+        #endregion
+
+        #region 폼 생성자, 폼 로드
         public Machine()
         {
             InitializeComponent();
         }
         private void Machine_Load(object sender, EventArgs e)
         {
-            m_MachineSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            // @@@수정필요@@@
-            Machine_IP = GetLocalIP();
-            IPAddress ServerIP = IPAddress.Parse(Machine_IP);
-            
-            IPEndPoint ipep = new IPEndPoint(ServerIP, 7001);
-            m_MachineSocket.Bind(ipep);
-            m_MachineSocket.Listen(100);
-
-            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-            args.Completed += new EventHandler<SocketAsyncEventArgs>(Accept_Completed);
-            m_MachineSocket.AcceptAsync(args);
-
-            showMessage(Rx_ReceiveTB, $"{ServerIP}<7001>을 열었습니다.","");
+            m_clientInfo = new Queue<ClientInfo>();
+            OpenServer();
         }
+
+
         #endregion
 
         #region 수신
-        private void Accept_Completed(object sender, SocketAsyncEventArgs e)
+        private async void OpenServer()
         {
-            Socket ClientSocket = e.AcceptSocket;
+            Machine_IP = GetLocalIP();
+            IPAddress ServerIP = IPAddress.Parse(Machine_IP);
 
-            m_ReceiveSocket = ClientSocket;
-            if (ClientSocket != null)
-            {
-                showMessage(Rx_ReceiveTB, "연결된 소켓 : ", ClientSocket.RemoteEndPoint.ToString());
-                SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-                buff = new byte[1024];
-                args.SetBuffer(buff, 0, buff.Length);
-                args.UserToken = e.AcceptSocket;
-                args.Completed += new EventHandler<SocketAsyncEventArgs>(Receive_Completed);
-                ClientSocket.ReceiveAsync(args);
-            }
-            else
-            {
-                e.AcceptSocket = null;
-                m_MachineSocket.AcceptAsync(e);
-            }
+            m_MachineSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ipep = new IPEndPoint(ServerIP, 7001);
+
+            m_MachineSocket.Bind(ipep);
+            m_MachineSocket.Listen(100);
+
+            var task = AsyncServer();
+            await task;
         }
 
-        private void Receive_Completed(object sender, SocketAsyncEventArgs e)
+        private async Task AsyncServer()
         {
-            Socket ClientSocket = (Socket)sender;
-
-            if(ClientSocket.Connected && e.BytesTransferred > 0)
+            while (true)
             {
-                byte[] buff = e.Buffer;
-                receiveData = Encoding.Unicode.GetString(buff);
+                Socket client = await m_MachineSocket.AcceptAsync();
 
-                if(receiveData.IndexOf("<") == 0 || receiveData.IndexOf(">") != -1)
+                new Task(() =>
                 {
-                    showMessage(Rx_ReceiveTB, "받은 데이터 : ", receiveData);
+                    showMessage(Rx_ReceiveTB, "1", "");
+                    // 클라이언트 EndPoint 정보 취득
+                    var ip = client.RemoteEndPoint as IPEndPoint;
 
-                    for(int i = 0; i < buff.Length; i++)
+                    // 클라이언트 접속정보 출력
+                    showMessage(Rx_ReceiveTB, $"{ip.Address}<{ip.Port}>에서 접속하였습니다.", $"접속 시간{DateTime.Now}");
+
+                    var sb = new StringBuilder();
+
+                    using (client)
                     {
-                        buff[i] = 0;
+                        showMessage(Rx_ReceiveTB, "2", "");
+                        while (true)
+                        {
+                            showMessage(Rx_ReceiveTB, "3", "");
+                            var binary = new byte[1024];
+
+                            client.Receive(binary);
+
+                            var data = Encoding.Unicode.GetString(binary);
+
+                            if (data.IndexOf(">") != -1)
+                            {
+                                showMessage(Rx_ReceiveTB, $"요청 메세지 끝", $"받은 시간{DateTime.Now}");
+                                sb.Append(data);
+
+                                showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", $"받은 시간{DateTime.Now}");
+
+                                ClientInfo clientInfo = new ClientInfo();
+                                clientInfo.socket = client;
+                                clientInfo.message = sb.ToString();
+                                m_clientInfo.Enqueue(clientInfo);
+
+                                Rx_RequestMsgWrite();
+
+                                sb.Clear();
+                            }
+                            else if (data.IndexOf("<") == 0)
+                            {
+                                showMessage(Rx_ReceiveTB, $"요청 메세지 시작", $"받은 시간{DateTime.Now}");
+
+                                sb.Append(data);
+                            }
+                            else
+                            {
+                                sb.Append(data);
+                            }
+                        }
                     }
-                    e.SetBuffer(buff, 0, 1024);
-                    ClientSocket.ReceiveAsync(e);
-                }
-            }
-            else
-            {
-                ClientSocket.Disconnect(false);
-                m_ReceiveSocket = null;
-                showMessage(Rx_ReceiveTB, "연결 끊김 : ", ClientSocket.RemoteEndPoint.ToString());
+                }).Start();
             }
         }
 
         private void Rx_RespBtn_Click(object sender, EventArgs e)
         {
-            if(receiveData != null)
+            if (m_clientInfo.Count > 0)
             {
-                string strData = receiveData;
-                strData.Replace("<", "").Replace(">", "");
-                string[] splitData = strData.Split(',');
+                ClientInfo clientInfo = m_clientInfo.Dequeue();
+                Socket currentSocket = clientInfo.socket;
+                string message = clientInfo.message;
+
+                message.Replace("<", "").Replace(">", "");
+                string[] splitData = message.Split(',');
+
                 string respData = "";
                 bool errorFlag = false;
 
@@ -145,131 +171,133 @@ namespace SocketCommunication_Client
                 else
                 {
                     byte[] byteRespData = Encoding.Unicode.GetBytes(respData);
-                    m_ReceiveSocket.Send(byteRespData, byteRespData.Length, SocketFlags.None);
-                    showMessage(Rx_ReceiveTB, "응답한 데이터 : ", respData);
+                    currentSocket.Send(byteRespData, byteRespData.Length, SocketFlags.None);
+                    showMessage(Rx_ReceiveTB, $"응답한 데이터 {respData}", $"응답 시간{DateTime.Now}");
+
+                    Rx_RequestMsgWrite();
                 }
             }
             else
             {
-                showMessage(Rx_ReceiveTB, "응답할 요청이 없습니다.", "");
+                MessageBox.Show("응답할 메세지가 없습니다.");
             }
-            
+        }
+
+
+        private void Rx_RequestMsgWrite()
+        {
+            if (m_clientInfo.Count > 0)
+            {
+                ClientInfo current = m_clientInfo.Peek();
+
+                // 크로스 스레드 방지
+                if (Rx_RequestMsgTB.InvokeRequired)
+                {
+                    Rx_RequestMsgTB.Invoke(new MethodInvoker(delegate ()
+                    {
+                        Rx_RequestMsgTB.Text = current.message;
+                    }));
+                }
+                else
+                {
+                    Rx_RequestMsgTB.Text = current.message;
+                }
+            }
+            else
+            {
+                Rx_RequestMsgTB.Text = "응답할 메세지가 없습니다.";
+            }
         }
         #endregion
 
         #region 송신
+        private async void Tx_OpenBtn_Click(object sender, EventArgs e)
+        {
+            if (m_VisionPCSocket == null)
+            {
+                IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(Machine_IP), 7000);
+
+                m_VisionPCSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                try
+                {
+                    m_VisionPCSocket.Connect(ipep);
+                    Tx_OpenBtn.Enabled = false;
+                }
+                catch (SocketException se)
+                {
+                    showMessage(Tx_ResultTB, se.Message, $"Error 시간{DateTime.Now}");
+                }
+                var Task = AsyncClient();
+                await Task;
+            }
+        }
         private void Tx_SendBtn_Click(object sender, EventArgs e)
         {
-            recBuff = new byte[1024];
-            this.DoConnect();
-        }
-
-        public void DoConnect()
-        {
-            if(m_VisionPCSocket == null)
+            if (m_VisionPCSocket != null)
             {
-                m_VisionPCSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                this.BeginConnect();
-            }
-            else
-            {
-                BeginSend(CreateMessage());
-            }
-        }
-
-        public void BeginConnect()
-        {
-            showMessage(Tx_ResultTB, "서버 접속 대기 중...", "");
-            try
-            {
-                showMessage(Tx_ResultTB, "서버 접속 성공", "");
-                m_VisionPCSocket.BeginConnect(Machine_IP, Machine_Port, new AsyncCallback(ConnectCallBack), m_VisionPCSocket);
-            }catch(SocketException e)
-            {
-                showMessage(Tx_ResultTB, "서버 접속 실패...", e.NativeErrorCode + "");
-                this.DoConnect();
-            }
-        }
-
-        private void ConnectCallBack(IAsyncResult IAR)
-        {
-            try
-            {
-                Socket tempSocket = (Socket)IAR.AsyncState;
-                IPEndPoint serverEP = (IPEndPoint)tempSocket.RemoteEndPoint;
-
-                tempSocket.EndConnect(IAR);
-                cbSock = tempSocket;
-                cbSock.BeginReceive(this.recBuff, 0, this.recBuff.Length, SocketFlags.None, new AsyncCallback(OnReceiveCallBack), cbSock);
-
-                string tempData = CreateMessage();
-                this.BeginSend(tempData);
-            }
-            catch(SocketException e)
-            {
-                if(e.SocketErrorCode == SocketError.NotConnected)
+                string message = CreateMessage();
+                if (message != null)
                 {
-                    showMessage(Tx_ResultTB, "서버 접속 실패", e.Message);
-                    this.BeginConnect();
+                    m_VisionPCSocket.Send(Encoding.Unicode.GetBytes(message));
+                    showMessage(Tx_ResultTB, $"보낸 데이터 {message}", $"보낸 시간{DateTime.Now}");
+                }
+                else
+                {
+                    MessageBox.Show("메세지 구성요소를 전부 입력하세요.");
                 }
             }
         }
 
-        public void OnReceiveCallBack(IAsyncResult IAR)
+        private async Task AsyncClient()
         {
             try
             {
-                Socket tempSocket = (Socket)IAR.AsyncState;
-                int nReadSize = tempSocket.EndReceive(IAR); 
-
-                if(nReadSize > 0)
+                new Task(() =>
                 {
-                    string strData = Encoding.Unicode.GetString(recBuff, 0, nReadSize);
-                    showMessage(Tx_ResultTB, "응답받은 결과 : ", strData);
-                }
+                    var sb = new StringBuilder();
 
-                this.Receive();
+                    using (m_VisionPCSocket)
+                    {
+                        while (true)
+                        {
+                            var binary = new byte[1024];
+
+                            m_VisionPCSocket.Receive(binary);
+
+                            var data = Encoding.Unicode.GetString(binary);
+
+                            if (data.IndexOf(">") != -1)
+                            {
+                                showMessage(Tx_ResultTB, $"응답 메세지 끝", $"받은 시간{DateTime.Now}");
+                                sb.Append(data);
+
+                                showMessage(Tx_ResultTB, $"응답 데이터 {sb}", $"받은 시간{DateTime.Now}");
+
+                                sb.Clear();
+                            }
+                            else if (data.IndexOf("<") == 0)
+                            {
+                                showMessage(Tx_ResultTB, $"응답 메세지 시작", $"받은 시간{DateTime.Now}");
+
+                                sb.Append(data);
+                            }
+                            else
+                            {
+                                sb.Append(data);
+                            }
+                        }
+                    }
+                }).Start();
             }
-            catch(SocketException e)
+            catch (SocketException se)
             {
-                if (e.SocketErrorCode == SocketError.ConnectionReset)
-                {
-                    this.BeginConnect();
-                }
+
             }
         }
+        #endregion
 
-        public void Receive()
-        {
-            cbSock.BeginReceive(this.recBuff, 0, this.recBuff.Length, SocketFlags.None, new AsyncCallback(OnReceiveCallBack), cbSock);
-        }
-
-        public void BeginSend(string message)
-        {
-            try
-            {
-                if (m_VisionPCSocket.Connected && message != "")
-                {
-                    byte[] buffer = Encoding.Unicode.GetBytes(message);
-
-                    m_VisionPCSocket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(SendCallBack), message);
-                }else
-                {
-                    showMessage(Tx_ResultTB, "데이터가 누락되었습니다.", "");
-                }
-            }
-            catch(SocketException e)
-            {
-                showMessage(Tx_ResultTB, "전송에러 : ", e.Message);
-            }
-        }
-
-        private void SendCallBack(IAsyncResult IAR)
-        {
-            string message = (string)IAR.AsyncState;
-            showMessage(Tx_ResultTB, "전송한 데이터 : ", message);
-        }
-
+        #region 유틸
         private string CreateMessage()
         {
             string result = "";
@@ -295,9 +323,6 @@ namespace SocketCommunication_Client
             }
             return result;
         }
-        #endregion
-
-        #region 유틸
         // 로컬 아이피 주소 가져오기
         private string GetLocalIP()
         {
@@ -311,7 +336,7 @@ namespace SocketCommunication_Client
             return localIP;
         }
 
-        #region 크로스 스레드 방지 메소드
+        
         private void showMessage(TextBox textBox, string message, string netMessage)
         {
             if (textBox.InvokeRequired)
@@ -367,11 +392,7 @@ namespace SocketCommunication_Client
             return result;
         }
         #endregion
-        #endregion
 
-
-
-
-
+        
     }
 }

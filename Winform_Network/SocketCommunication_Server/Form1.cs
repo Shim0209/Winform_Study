@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -75,7 +74,6 @@ namespace SocketCommunication_Server
 
                 new Task(() =>
                 {
-                    showMessage(Rx_ReceiveTB, "1", "");
                     // 클라이언트 EndPoint 정보 취득
                     var ip = client.RemoteEndPoint as IPEndPoint;
 
@@ -86,10 +84,8 @@ namespace SocketCommunication_Server
 
                     using (client)
                     {
-                        showMessage(Rx_ReceiveTB, "2", "");
                         while (true)
                         {
-                            showMessage(Rx_ReceiveTB, "3", "");
                             var binary = new byte[1024];
 
                             client.Receive(binary);
@@ -228,7 +224,6 @@ namespace SocketCommunication_Server
             {
                 Rx_RequestMsgTB.Text = "응답할 메세지가 없습니다.";
             }
-
         }
         #endregion
 
@@ -238,7 +233,7 @@ namespace SocketCommunication_Server
         {
             if (m_MachineSocket == null)
             {
-                IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(VisionPC_IP), 7000);
+                IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(VisionPC_IP), 7001);
 
                 m_MachineSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
