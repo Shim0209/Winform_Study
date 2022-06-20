@@ -88,6 +88,8 @@ namespace SocketCommunication_Client
                     showMessage(Rx_ReceiveTB, $"{ip.Address}<{ip.Port}>에서 접속하였습니다.", $" - [{DateTime.Now}]");
 
                     var sb = new StringBuilder();
+                    int count = 0;
+                    int byteCount = 0;
 
                     using (client)
                     {
@@ -95,11 +97,70 @@ namespace SocketCommunication_Client
                         {
                             var binary = new byte[1024];
 
-                            client.Receive(binary);
+                            int length = client.Receive(binary);
 
                             var data = Encoding.Unicode.GetString(binary);
 
-                            if (data.IndexOf(">") != -1)
+                            if (binary[0] == 60)
+                            {
+                                count++;
+                                byteCount += length;
+
+                                if (binary[length - 2] == 62)
+                                {
+                                    sb.Append(data);
+
+                                    showMessage(Rx_ReceiveTB, $"{count}회에 거쳐서 {byteCount}byte 수신", "");
+                                    showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", "");
+
+                                    ClientInfo clientInfo = new ClientInfo();
+                                    clientInfo.socket = client;
+                                    clientInfo.message = sb.ToString();
+                                    m_clientInfo.Enqueue(clientInfo);
+
+                                    Rx_BoxDataWrite();
+                                    Rx_RequestMsgWrite();
+
+                                    byteCount = 0;
+                                    count = 0;
+                                    sb.Clear();
+                                }
+                                else
+                                {
+                                    sb.Append(data);
+                                }
+                            }
+                            else
+                            {
+                                count++;
+                                byteCount += length;
+
+                                if (binary[length - 2] != 62)
+                                {
+                                    sb.Append(data);
+                                }
+                                else if (binary[length - 2] == 62)
+                                {
+                                    sb.Append(data);
+
+                                    showMessage(Rx_ReceiveTB, $"{count}회에 거쳐서 {byteCount}byte 수신", "");
+                                    showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", "");
+
+                                    ClientInfo clientInfo = new ClientInfo();
+                                    clientInfo.socket = client;
+                                    clientInfo.message = sb.ToString();
+                                    m_clientInfo.Enqueue(clientInfo);
+
+                                    Rx_BoxDataWrite();
+                                    Rx_RequestMsgWrite();
+
+                                    byteCount = 0;
+                                    count = 0;
+                                    sb.Clear();
+                                }
+                            }
+
+                            /*if (data.IndexOf(">") != -1)
                             {
                                 sb.Append(data);
 
@@ -118,7 +179,7 @@ namespace SocketCommunication_Client
                             else
                             {
                                 sb.Append(data);
-                            }
+                            }*/
                         }
                     }
                 }).Start();
