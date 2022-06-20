@@ -10,46 +10,6 @@ using System.Windows.Forms;
 namespace SocketCommunication_Server
 {
     // 서버의 비동기 응답을 위한 자료구조
-    public struct ClientInfo
-    {
-        public string message;
-        public Socket socket;
-
-        public ClientInfo(string message, Socket socket)
-        {
-            this.message = message;
-            this.socket = socket;
-        }
-    }
-    public class IniFile
-    {
-        [DllImport("kernel32.dll")] // 윈도우즈 기본 API
-        private static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
-
-        [DllImport("kernel32.dll")]
-        private static extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
-        public static void SetValue(string path, string Section, string Key, string Value)
-        {
-            WritePrivateProfileString(Section, Key, Value, path);
-        }
-
-        public static string GetValue(string path, string Section, string Key, string Default)
-        {
-            StringBuilder temp = new StringBuilder(255);
-
-            int i = GetPrivateProfileString(Section, Key, Default, temp, 255, path);
-
-            if (temp != null && temp.Length > 0)
-            {
-                return temp.ToString();
-            }
-            else
-            {
-                return Default;
-            }
-        } 
-    }
-
     public partial class VisionPC : Form
     {
         
@@ -486,5 +446,44 @@ namespace SocketCommunication_Server
             }
         }
         #endregion
+    }
+    public struct ClientInfo
+    {
+        public string message;
+        public Socket socket;
+
+        public ClientInfo(string message, Socket socket)
+        {
+            this.message = message;
+            this.socket = socket;
+        }
+    }
+    public class IniFile
+    {
+        [DllImport("kernel32.dll")] // 윈도우즈 기본 API
+        private static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
+
+        [DllImport("kernel32.dll")]
+        private static extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
+        public static void SetValue(string path, string Section, string Key, string Value)
+        {
+            WritePrivateProfileString(Section, Key, Value, path);
+        }
+
+        public static string GetValue(string path, string Section, string Key, string Default)
+        {
+            StringBuilder temp = new StringBuilder(255);
+
+            int i = GetPrivateProfileString(Section, Key, Default, temp, 255, path);
+
+            if (temp != null && temp.Length > 0)
+            {
+                return temp.ToString();
+            }
+            else
+            {
+                return Default;
+            }
+        }
     }
 }
