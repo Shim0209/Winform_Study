@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,18 +21,55 @@ namespace SocketCommunication_Server
             this.socket = socket;
         }
     }
+    public class IniFile
+    {
+        [DllImport("kernel32.dll")] // 윈도우즈 기본 API
+        private static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
+
+        [DllImport("kernel32.dll")]
+        private static extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
+        public static void SetValue(string path, string Section, string Key, string Value)
+        {
+            WritePrivateProfileString(Section, Key, Value, path);
+        }
+
+        public static string GetValue(string path, string Section, string Key, string Default)
+        {
+            StringBuilder temp = new StringBuilder(255);
+
+            int i = GetPrivateProfileString(Section, Key, Default, temp, 255, path);
+
+            if (temp != null && temp.Length > 0)
+            {
+                return temp.ToString();
+            }
+            else
+            {
+                return Default;
+            }
+        } 
+    }
+
     public partial class VisionPC : Form
     {
+        
+
         #region 속성 초기화
         // 새로운 버전
         private Queue<ClientInfo> m_clientInfo;
 
         // 송신
+        private string Client_IP = "";
+        private int Client_Port = 0;
         private Socket m_MachineSocket; // Machine으로 요청할 때 사용 (요청용)
-        private string VisionPC_IP = "";
 
         // 수신
+        private string Server_IP = "";
+        private int Server_Port = 0;
         private Socket m_VisionPCSocket; // Machine에서 요청하는 데이터를 수신할 때 사용 (요청 수신용)
+
+        // ini 파일
+        const string iniSavePath = @"C:\DPS\SocketCommunication_VisionPC.ini";
         #endregion
 
         #region 폼 생성자, 폼 로드
@@ -42,8 +80,22 @@ namespace SocketCommunication_Server
 
         private void VisionPC_Load(object sender, EventArgs e)
         {
-            // 새로운 버전
+            // ini 파일로드
+            Client_IP = IniFile.GetValue(iniSavePath, "Client", "IP", GetLocalIP());
+            Client_Port = int.Parse(IniFile.GetValue(iniSavePath, "Client", "Port", "7001"));
+            //Server_IP = IniFile.GetValue(iniSavePath, "Server", "IP", GetLocalIP());
+            Server_IP = GetLocalIP();
+            Server_Port = int.Parse(IniFile.GetValue(iniSavePath, "Server", "Port", "7000"));
+
+            IniFile.SetValue(iniSavePath, "Client", "IP", Client_IP);
+            IniFile.SetValue(iniSavePath, "Client", "Port", Client_Port.ToString());
+            IniFile.SetValue(iniSavePath, "Server", "IP", Server_IP);
+            IniFile.SetValue(iniSavePath, "Server", "Port", Server_Port.ToString());
+
+            // 클라이언트(Machine) Socket, message 저장소
             m_clientInfo = new Queue<ClientInfo>();
+
+            // 수신 서버 시작
             OpenServer();
         }
         #endregion
@@ -52,11 +104,10 @@ namespace SocketCommunication_Server
         // 서버 Open
         private async void OpenServer()
         {
-            VisionPC_IP = GetLocalIP();
-            IPAddress ServerIP = IPAddress.Parse(VisionPC_IP);
+            IPAddress ServerIP = IPAddress.Parse(Server_IP);
 
             m_VisionPCSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ipep = new IPEndPoint(ServerIP, 7000);
+            IPEndPoint ipep = new IPEndPoint(ServerIP, Server_Port);
 
             m_VisionPCSocket.Bind(ipep);
             m_VisionPCSocket.Listen(100);
@@ -78,7 +129,7 @@ namespace SocketCommunication_Server
                     var ip = client.RemoteEndPoint as IPEndPoint;
 
                     // 클라이언트 접속정보 출력
-                    showMessage(Rx_ReceiveTB, $"{ip.Address}<{ip.Port}>에서 접속하였습니다.", $"접속 시간{DateTime.Now}");
+                    showMessage(Rx_ReceiveTB, $"{ip.Address}<{ip.Port}>에서 접속하였습니다.", $" - [{DateTime.Now}]");
 
                     var sb = new StringBuilder();
 
@@ -94,10 +145,9 @@ namespace SocketCommunication_Server
 
                             if(data.IndexOf(">") != -1)
                             {
-                                showMessage(Rx_ReceiveTB, $"요청 메세지 끝", $"받은 시간{DateTime.Now}");
                                 sb.Append(data);
 
-                                showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", $"받은 시간{DateTime.Now}");
+                                showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", "");
 
                                 ClientInfo clientInfo = new ClientInfo();
                                 clientInfo.socket = client;
@@ -108,12 +158,6 @@ namespace SocketCommunication_Server
                                 Rx_RequestMsgWrite();
 
                                 sb.Clear();
-                            }
-                            else if(data.IndexOf("<") == 0)
-                            {
-                                showMessage(Rx_ReceiveTB, $"요청 메세지 시작", $"받은 시간{DateTime.Now}");
-                                
-                                sb.Append(data);
                             }
                             else
                             {
@@ -190,7 +234,7 @@ namespace SocketCommunication_Server
                     // 전송
                     byte[] byteRespData = Encoding.Unicode.GetBytes(respData);
                     currentSocket.Send(byteRespData, byteRespData.Length, SocketFlags.None);
-                    showMessage(Rx_ReceiveTB, $"응답한 데이터 {respData}", $"응답 시간{DateTime.Now}");
+                    showMessage(Rx_ReceiveTB, $"응답한 데이터 {respData}", "");
 
                     m_clientInfo.Dequeue();
 
@@ -254,12 +298,12 @@ namespace SocketCommunication_Server
         #endregion
 
         #region 송신
-        // 클라이언터 Open
+        // 클라이언트 Open
         private async void Tx_OpenBtn_Click(object sender, EventArgs e)
         {
             if (m_MachineSocket == null)
             {
-                IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(VisionPC_IP), 7001);
+                IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(Client_IP), Client_Port);
 
                 m_MachineSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -270,7 +314,7 @@ namespace SocketCommunication_Server
                 }
                 catch (SocketException se)
                 {
-                    showMessage(Tx_ResultTB, se.Message, $"Error 시간{DateTime.Now}");
+                    showMessage(Tx_ResultTB, se.Message, $" - [{DateTime.Now}]");
                 }
                 var Task = AsyncClient();
                 await Task;
@@ -282,10 +326,10 @@ namespace SocketCommunication_Server
             if (m_MachineSocket != null)
             {
                 string message = CreateMessage();
-                if (message != null)
+                if (message != "")
                 {
                     m_MachineSocket.Send(Encoding.Unicode.GetBytes(message));
-                    showMessage(Tx_ResultTB, $"보낸 데이터 {message}", $"보낸 시간{DateTime.Now}");
+                    showMessage(Tx_ResultTB, $"보낸 데이터 {message}", "");
                 }
                 else
                 {
@@ -314,18 +358,11 @@ namespace SocketCommunication_Server
 
                             if (data.IndexOf(">") != -1)
                             {
-                                showMessage(Tx_ResultTB, $"응답 메세지 끝", $"받은 시간{DateTime.Now}");
                                 sb.Append(data);
 
-                                showMessage(Tx_ResultTB, $"응답 데이터 {sb}", $"받은 시간{DateTime.Now}");
+                                showMessage(Tx_ResultTB, $"응답 데이터 {sb}", "");
 
                                 sb.Clear();
-                            }
-                            else if (data.IndexOf("<") == 0)
-                            {
-                                showMessage(Tx_ResultTB, $"응답 메세지 시작", $"받은 시간{DateTime.Now}");
-
-                                sb.Append(data);
                             }
                             else
                             {
