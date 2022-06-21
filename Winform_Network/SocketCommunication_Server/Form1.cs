@@ -28,6 +28,7 @@ namespace SocketCommunication_Server
         private string Server_IP = "";
         private int Server_Port = 0;
         private Socket m_VisionPCSocket; // Machine에서 요청하는 데이터를 수신할 때 사용 (요청 수신용)
+        private Socket streamSocket;
 
         // ini 파일
         const string iniSavePath = @"C:\DPS\SocketCommunication_VisionPC.ini";
@@ -42,7 +43,7 @@ namespace SocketCommunication_Server
         private void VisionPC_Load(object sender, EventArgs e)
         {
             // ini 파일로드
-            Client_IP = IniFile.GetValue(iniSavePath, "Client", "IP", GetLocalIP());
+            Client_IP = IniFile.GetValue(iniSavePath, "Client", "IP", "IP를 입력하세요.");
             Client_Port = int.Parse(IniFile.GetValue(iniSavePath, "Client", "Port", "7001"));
             //Server_IP = IniFile.GetValue(iniSavePath, "Server", "IP", GetLocalIP());
             Server_IP = GetLocalIP();
@@ -52,6 +53,9 @@ namespace SocketCommunication_Server
             IniFile.SetValue(iniSavePath, "Client", "Port", Client_Port.ToString());
             IniFile.SetValue(iniSavePath, "Server", "IP", Server_IP);
             IniFile.SetValue(iniSavePath, "Server", "Port", Server_Port.ToString());
+
+            // ClientIP TextBox 값 초기화
+            Tx_ClientIPTB.Text = Client_IP;
 
             // 클라이언트(Machine) Socket, message 저장소
             m_clientInfo = new Queue<ClientInfo>();
@@ -73,8 +77,36 @@ namespace SocketCommunication_Server
             m_VisionPCSocket.Bind(ipep);
             m_VisionPCSocket.Listen(100);
 
-            var task = AsyncServer();
-            await task;
+            Rx_OpenBtn.Enabled = false;
+            Rx_CloseBtn.Enabled = true;
+
+            try
+            {
+                var task = AsyncServer();
+                await task;
+            }catch (Exception ex)
+            {
+                showMessage(Rx_ReceiveTB, "VisionPC 서버를 닫았습니다.", "");
+            }
+        }
+
+        private void Rx_CloseBtn_Click(object sender, EventArgs e)
+        {
+            m_VisionPCSocket.Dispose();
+            m_VisionPCSocket.Close();
+            m_VisionPCSocket=null;
+
+            streamSocket.Dispose();
+            streamSocket.Close();
+            streamSocket = null;
+
+            Rx_OpenBtn.Enabled = true;
+            Rx_CloseBtn.Enabled = false;
+        }
+
+        private void Rx_OpenBtn_Click(object sender, EventArgs e)
+        {
+            OpenServer();
         }
 
         // 서버 수신 처리
@@ -82,12 +114,12 @@ namespace SocketCommunication_Server
         {
             while (true)
             {
-                Socket client = await m_VisionPCSocket.AcceptAsync();
+                streamSocket = await m_VisionPCSocket.AcceptAsync();
 
                 new Task(() =>
                 {
                     // 클라이언트 EndPoint 정보 취득
-                    var ip = client.RemoteEndPoint as IPEndPoint;
+                    var ip = streamSocket.RemoteEndPoint as IPEndPoint;
 
                     // 클라이언트 접속정보 출력
                     showMessage(Rx_ReceiveTB, $"{ip.Address}<{ip.Port}>에서 접속하였습니다.", $" - [{DateTime.Now}]");
@@ -96,13 +128,20 @@ namespace SocketCommunication_Server
                     int count = 0;
                     int byteCount = 0;
 
-                    using (client)
+                    using (streamSocket)
                     {
                         while (true)
                         {
                             var binary = new byte[1024];
-
-                            int length = client.Receive(binary);
+                            int length;
+                            try
+                            {
+                                length = streamSocket.Receive(binary);
+                            } 
+                            catch (Exception ex)
+                            {
+                                return;
+                            }
 
                             var data = Encoding.Unicode.GetString(binary);
 
@@ -119,7 +158,7 @@ namespace SocketCommunication_Server
                                     showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", "");
 
                                     ClientInfo clientInfo = new ClientInfo();
-                                    clientInfo.socket = client;
+                                    clientInfo.socket = streamSocket;
                                     clientInfo.message = sb.ToString();
                                     m_clientInfo.Enqueue(clientInfo);
 
@@ -150,7 +189,7 @@ namespace SocketCommunication_Server
                                     showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", "");
 
                                     ClientInfo clientInfo = new ClientInfo();
-                                    clientInfo.socket = client;
+                                    clientInfo.socket = streamSocket;
                                     clientInfo.message = sb.ToString();
                                     m_clientInfo.Enqueue(clientInfo);
 
@@ -232,9 +271,16 @@ namespace SocketCommunication_Server
                 {
                     // 전송
                     byte[] byteRespData = Encoding.Unicode.GetBytes(respData);
-                    currentSocket.Send(byteRespData, byteRespData.Length, SocketFlags.None);
-                    showMessage(Rx_ReceiveTB, $"응답한 데이터 {respData}", "");
+                    try
+                    {
+                        currentSocket.Send(byteRespData, byteRespData.Length, SocketFlags.None);
 
+                        showMessage(Rx_ReceiveTB, $"응답한 데이터 {respData}", "");
+                    }
+                    catch(ObjectDisposedException pde)
+                    {
+                        showMessage(Rx_ReceiveTB, "Machine과의 연결이 해제되었습니다.", "");
+                    }
                     m_clientInfo.Dequeue();
 
                     Rx_BoxDataWrite();
@@ -302,27 +348,39 @@ namespace SocketCommunication_Server
         {
             if (m_MachineSocket == null)
             {
-                IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(Client_IP), Client_Port);
+                // 연결할 Machine의 IP값 가져오기
+                string currentClientIP = Tx_ClientIPTB.Text;
+                IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(currentClientIP), Client_Port);
 
                 m_MachineSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                // 연결한 Machine의 IP값 Ini 파일에 저장
+                IniFile.SetValue(iniSavePath, "Client", "IP", currentClientIP);
 
                 try
                 {
                     m_MachineSocket.Connect(ipep);
                     Tx_OpenBtn.Enabled = false;
+                    Tx_CloseBtn.Enabled = true;
+                    showMessage(Tx_ResultTB, "Machine과 연결 하였습니다.", "");
+
+                    var Task = AsyncClient();
+                    await Task;
                 }
                 catch (SocketException se)
                 {
+                    if(m_MachineSocket != null)
+                    {
+                        m_MachineSocket = null;
+                    }
                     showMessage(Tx_ResultTB, se.Message, $" - [{DateTime.Now}]");
                 }
-                var Task = AsyncClient();
-                await Task;
             }
         }
 
         private void Tx_SendBtn_Click(object sender, EventArgs e)
         {
-            if (m_MachineSocket != null)
+            if (m_MachineSocket != null && m_MachineSocket.Connected)
             {
                 string message = CreateMessage();
                 if (message != "")
@@ -334,6 +392,11 @@ namespace SocketCommunication_Server
                 {
                     MessageBox.Show("메세지 구성요소를 전부 입력하세요.");
                 }
+            }
+            else
+            {
+                showMessage(Tx_ResultTB, "Machine에서 서버를 닫았습니다.", "");
+                DoClose();
             }
         }
 
@@ -351,7 +414,14 @@ namespace SocketCommunication_Server
                         {
                             var binary = new byte[1024];
 
-                            m_MachineSocket.Receive(binary);
+                            try
+                            {
+                                m_MachineSocket.Receive(binary);
+                            }
+                            catch(SocketException se)
+                            {
+                                return;
+                            }
 
                             var data = Encoding.Unicode.GetString(binary);
 
@@ -374,6 +444,26 @@ namespace SocketCommunication_Server
             catch (SocketException se)
             {
 
+            }
+        }
+
+        private void Tx_CloseBtn_Click(object sender, EventArgs e)
+        {
+            DoClose();
+        }
+
+        private void DoClose()
+        {
+            if (m_MachineSocket != null)
+            {
+                m_MachineSocket.Dispose();
+                m_MachineSocket.Close();
+                m_MachineSocket = null;
+
+                Tx_OpenBtn.Enabled = true;
+                Tx_CloseBtn.Enabled = false;
+
+                showMessage(Tx_ResultTB, "Machine과의 연결을 해제하였습니다.", "");
             }
         }
         #endregion
@@ -484,7 +574,10 @@ namespace SocketCommunication_Server
                 cb.Text = data;
             }
         }
+
         #endregion
+
+        
     }
     public struct ClientInfo
     {
