@@ -92,13 +92,34 @@ namespace SocketCommunication_Server
 
         private void Rx_CloseBtn_Click(object sender, EventArgs e)
         {
+            // 서버 수신용 소켓 닫음
             m_VisionPCSocket.Dispose();
             m_VisionPCSocket.Close();
             m_VisionPCSocket=null;
 
-            streamSocket.Dispose();
-            streamSocket.Close();
-            streamSocket = null;
+            byte[] closeMessage = Encoding.Unicode.GetBytes("Close");
+            // Machine 요청 리스트에 있는 모든 소켓에게 서버 닫혔다고 알림
+            if (m_clientInfo != null)
+            {
+                foreach (ClientInfo clientInfo in m_clientInfo)
+                {
+                    clientInfo.socket.Send(closeMessage, closeMessage.Length, SocketFlags.None);
+                }
+
+                m_clientInfo.Clear();
+                Rx_BoxDataWrite();
+                Rx_RequestMsgWrite();
+            }
+            
+
+            // 현재 연결된 Machine에게 서버 닫혔다고 알림
+            if (streamSocket != null && streamSocket.Connected)
+            {
+                streamSocket.Send(closeMessage, closeMessage.Length, SocketFlags.None);
+                streamSocket.Dispose();
+                streamSocket.Close();
+                streamSocket = null;
+            }
 
             Rx_OpenBtn.Enabled = true;
             Rx_CloseBtn.Enabled = false;
@@ -165,6 +186,8 @@ namespace SocketCommunication_Server
                                     Rx_BoxDataWrite();
                                     Rx_RequestMsgWrite();
 
+                                    byteCount = 0;
+                                    count = 0;
                                     sb.Clear();
                                 }
                                 else
@@ -196,6 +219,7 @@ namespace SocketCommunication_Server
                                     Rx_BoxDataWrite();
                                     Rx_RequestMsgWrite();
 
+                                    byteCount = 0;
                                     count = 0;
                                     sb.Clear();
                                 }
@@ -425,6 +449,14 @@ namespace SocketCommunication_Server
 
                             var data = Encoding.Unicode.GetString(binary);
 
+                            // 받은 데이터가 서버 닫혔다는 신호일때
+                            if (data.Trim('\0') == "Close")
+                            {
+                                DoClose();
+                                return;
+                            }
+
+                            // Machine로부터 응답메세지 수신
                             if (data.IndexOf(">") != -1)
                             {
                                 sb.Append(data);
@@ -460,8 +492,29 @@ namespace SocketCommunication_Server
                 m_MachineSocket.Close();
                 m_MachineSocket = null;
 
-                Tx_OpenBtn.Enabled = true;
-                Tx_CloseBtn.Enabled = false;
+                if (Tx_OpenBtn.InvokeRequired)
+                {
+                    Tx_OpenBtn.Invoke(new MethodInvoker(delegate ()
+                    {
+                        Tx_OpenBtn.Enabled = true;
+                    }));
+                }
+                else
+                {
+                    Tx_OpenBtn.Enabled = true;
+                }
+
+                if (Tx_CloseBtn.InvokeRequired)
+                {
+                    Tx_CloseBtn.Invoke(new MethodInvoker(delegate ()
+                    {
+                        Tx_CloseBtn.Enabled = false;
+                    }));
+                }
+                else
+                {
+                    Tx_CloseBtn.Enabled = false;
+                }
 
                 showMessage(Tx_ResultTB, "Machine과의 연결을 해제하였습니다.", "");
             }

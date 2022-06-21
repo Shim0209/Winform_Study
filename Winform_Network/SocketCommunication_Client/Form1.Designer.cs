@@ -29,8 +29,10 @@
         private void InitializeComponent()
         {
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.Rx_CloseBtn = new System.Windows.Forms.Button();
+            this.Rx_OpenBtn = new System.Windows.Forms.Button();
             this.Rx_RequestMsgTB = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.Rx_CommandCB = new System.Windows.Forms.ComboBox();
             this.Rx_ReceiveTB = new System.Windows.Forms.TextBox();
             this.Rx_RespBtn = new System.Windows.Forms.Button();
@@ -44,6 +46,9 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Tx_CloseBtn = new System.Windows.Forms.Button();
+            this.ClientIPTB = new System.Windows.Forms.Label();
+            this.Tx_ClientIPTB = new System.Windows.Forms.TextBox();
             this.Tx_OpenBtn = new System.Windows.Forms.Button();
             this.Tx_SendBtn = new System.Windows.Forms.Button();
             this.Tx_ResultTB = new System.Windows.Forms.TextBox();
@@ -61,8 +66,10 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.Rx_CloseBtn);
+            this.groupBox2.Controls.Add(this.Rx_OpenBtn);
             this.groupBox2.Controls.Add(this.Rx_RequestMsgTB);
+            this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.Rx_CommandCB);
             this.groupBox2.Controls.Add(this.Rx_ReceiveTB);
             this.groupBox2.Controls.Add(this.Rx_RespBtn);
@@ -82,24 +89,44 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rx";
             // 
-            // label5
+            // Rx_CloseBtn
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 34);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(58, 12);
-            this.label5.TabIndex = 33;
-            this.label5.Text = "Message";
+            this.Rx_CloseBtn.Location = new System.Drawing.Point(383, 34);
+            this.Rx_CloseBtn.Name = "Rx_CloseBtn";
+            this.Rx_CloseBtn.Size = new System.Drawing.Size(75, 23);
+            this.Rx_CloseBtn.TabIndex = 37;
+            this.Rx_CloseBtn.Text = "해제";
+            this.Rx_CloseBtn.UseVisualStyleBackColor = true;
+            this.Rx_CloseBtn.Click += new System.EventHandler(this.Rx_CloseBtn_Click);
+            // 
+            // Rx_OpenBtn
+            // 
+            this.Rx_OpenBtn.Location = new System.Drawing.Point(303, 34);
+            this.Rx_OpenBtn.Name = "Rx_OpenBtn";
+            this.Rx_OpenBtn.Size = new System.Drawing.Size(75, 23);
+            this.Rx_OpenBtn.TabIndex = 36;
+            this.Rx_OpenBtn.Text = "연결";
+            this.Rx_OpenBtn.UseVisualStyleBackColor = true;
+            this.Rx_OpenBtn.Click += new System.EventHandler(this.Rx_OpenBtn_Click);
             // 
             // Rx_RequestMsgTB
             // 
             this.Rx_RequestMsgTB.Font = new System.Drawing.Font("굴림", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.Rx_RequestMsgTB.Location = new System.Drawing.Point(81, 19);
+            this.Rx_RequestMsgTB.Location = new System.Drawing.Point(81, 34);
             this.Rx_RequestMsgTB.Multiline = true;
             this.Rx_RequestMsgTB.Name = "Rx_RequestMsgTB";
             this.Rx_RequestMsgTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.Rx_RequestMsgTB.Size = new System.Drawing.Size(378, 38);
+            this.Rx_RequestMsgTB.Size = new System.Drawing.Size(210, 23);
             this.Rx_RequestMsgTB.TabIndex = 32;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(11, 40);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(60, 12);
+            this.label11.TabIndex = 35;
+            this.label11.Text = "Next Msg";
             // 
             // Rx_CommandCB
             // 
@@ -223,6 +250,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.Tx_CloseBtn);
+            this.groupBox1.Controls.Add(this.ClientIPTB);
+            this.groupBox1.Controls.Add(this.Tx_ClientIPTB);
             this.groupBox1.Controls.Add(this.Tx_OpenBtn);
             this.groupBox1.Controls.Add(this.Tx_SendBtn);
             this.groupBox1.Controls.Add(this.Tx_ResultTB);
@@ -241,11 +271,37 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tx";
             // 
+            // Tx_CloseBtn
+            // 
+            this.Tx_CloseBtn.Location = new System.Drawing.Point(386, 35);
+            this.Tx_CloseBtn.Name = "Tx_CloseBtn";
+            this.Tx_CloseBtn.Size = new System.Drawing.Size(75, 23);
+            this.Tx_CloseBtn.TabIndex = 20;
+            this.Tx_CloseBtn.Text = "해제";
+            this.Tx_CloseBtn.UseVisualStyleBackColor = true;
+            this.Tx_CloseBtn.Click += new System.EventHandler(this.Tx_CloseBtn_Click);
+            // 
+            // ClientIPTB
+            // 
+            this.ClientIPTB.AutoSize = true;
+            this.ClientIPTB.Location = new System.Drawing.Point(4, 43);
+            this.ClientIPTB.Name = "ClientIPTB";
+            this.ClientIPTB.Size = new System.Drawing.Size(72, 12);
+            this.ClientIPTB.TabIndex = 19;
+            this.ClientIPTB.Text = "VisionPC IP";
+            // 
+            // Tx_ClientIPTB
+            // 
+            this.Tx_ClientIPTB.Location = new System.Drawing.Point(79, 37);
+            this.Tx_ClientIPTB.Name = "Tx_ClientIPTB";
+            this.Tx_ClientIPTB.Size = new System.Drawing.Size(220, 21);
+            this.Tx_ClientIPTB.TabIndex = 18;
+            // 
             // Tx_OpenBtn
             // 
-            this.Tx_OpenBtn.Location = new System.Drawing.Point(11, 20);
+            this.Tx_OpenBtn.Location = new System.Drawing.Point(305, 35);
             this.Tx_OpenBtn.Name = "Tx_OpenBtn";
-            this.Tx_OpenBtn.Size = new System.Drawing.Size(450, 38);
+            this.Tx_OpenBtn.Size = new System.Drawing.Size(75, 23);
             this.Tx_OpenBtn.TabIndex = 11;
             this.Tx_OpenBtn.Text = "연결";
             this.Tx_OpenBtn.UseVisualStyleBackColor = true;
@@ -397,8 +453,13 @@
         private System.Windows.Forms.ComboBox Tx_PickerCB;
         private System.Windows.Forms.ComboBox Rx_CommandCB;
         private System.Windows.Forms.Button Tx_OpenBtn;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox Rx_RequestMsgTB;
+        private System.Windows.Forms.Button Tx_CloseBtn;
+        private System.Windows.Forms.Label ClientIPTB;
+        private System.Windows.Forms.TextBox Tx_ClientIPTB;
+        private System.Windows.Forms.Button Rx_CloseBtn;
+        private System.Windows.Forms.Button Rx_OpenBtn;
+        private System.Windows.Forms.Label label11;
     }
 }
 
