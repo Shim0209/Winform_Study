@@ -152,7 +152,7 @@ namespace SocketCommunication_Server
                             } 
                             catch (Exception ex)
                             {
-                                continue;
+                                break; // 연결이 끊기면 Accept로 돌아간다.
                             }
 
                             var data = Encoding.ASCII.GetString(binary);
