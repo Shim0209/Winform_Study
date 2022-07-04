@@ -77,17 +77,8 @@ namespace SocketCommunication_Server
             m_VisionPCSocket.Bind(ipep);
             m_VisionPCSocket.Listen(100);
 
-            Rx_OpenBtn.Enabled = false;
-            Rx_CloseBtn.Enabled = true;
-
-            try
-            {
-                var task = AsyncServer();
-                await task;
-            }catch (Exception ex)
-            {
-                showMessage(Rx_ReceiveTB, "VisionPC 서버를 닫았습니다.", "");
-            }
+            var task = AsyncServer();
+            await task;
         }
 
         private void Rx_CloseBtn_Click(object sender, EventArgs e)
@@ -161,76 +152,149 @@ namespace SocketCommunication_Server
                             } 
                             catch (Exception ex)
                             {
-                                return;
+                                continue;
                             }
 
-                            var data = Encoding.Unicode.GetString(binary);
+                            var data = Encoding.ASCII.GetString(binary);
 
-                            if (binary[0] == 60)
-                            {
-                                count++;
-                                byteCount += length;
-
-                                if (binary[length - 2] == 62)
-                                {
-                                    sb.Append(data);
-
-                                    showMessage(Rx_ReceiveTB, $"{count}회에 거쳐서 {byteCount}byte 수신", "");
-                                    showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", "");
-
-                                    ClientInfo clientInfo = new ClientInfo();
-                                    clientInfo.socket = streamSocket;
-                                    clientInfo.message = sb.ToString();
-                                    m_clientInfo.Enqueue(clientInfo);
-
-                                    Rx_BoxDataWrite();
-                                    Rx_RequestMsgWrite();
-
-                                    byteCount = 0;
-                                    count = 0;
-                                    sb.Clear();
-                                }
-                                else
-                                {
-                                    sb.Append(data);
-                                }
-                            }
-                            else
-                            {
-                                count++;
-                                byteCount += length;
-
-                                if (binary[length - 2] != 62)
-                                {
-                                    sb.Append(data);
-                                }
-                                else if (binary[length - 2] == 62)
-                                {
-                                    sb.Append(data);
-
-                                    showMessage(Rx_ReceiveTB, $"{count}회에 거쳐서 {byteCount}byte 수신", "");
-                                    showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", "");
-
-                                    ClientInfo clientInfo = new ClientInfo();
-                                    clientInfo.socket = streamSocket;
-                                    clientInfo.message = sb.ToString();
-                                    m_clientInfo.Enqueue(clientInfo);
-
-                                    Rx_BoxDataWrite();
-                                    Rx_RequestMsgWrite();
-
-                                    byteCount = 0;
-                                    count = 0;
-                                    sb.Clear();
-                                }
-                            }
-                          
+                            if (length > 0)
+                                Task.Run(() => ReceiveProcess(streamSocket, data));
                         }
                     }
                 }).Start();
             }
         }
 
+        private void ReceiveProcess(Socket client, string data)
+        {
+            while (true)
+            {
+                if (data.IndexOf('<') != -1) // < 있는 경우
+                {
+                    data = data.Substring(data.IndexOf('<')); // < 앞 데이터 전부 없애기
+
+                    // > 있는경우
+                    if (data.IndexOf('>') == data.Length - 1) // 마지막에 있는 경우
+                    {
+                        // 붙이고 Send
+                        //sb.Append(data);
+
+                        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
+                        showMessage(Rx_ReceiveTB, $"받은 데이터 {data}", "");
+
+                        ClientInfo clientInfo = new ClientInfo();
+                        clientInfo.socket = client;
+                        clientInfo.message = data;
+                        //m_clientInfo.Enqueue(clientInfo);
+                        Rx_BoxDataWrite();
+                        Rx_RequestMsgWrite();
+                        AssignReceiveData();
+
+                        // sb 초기화
+                        //sb.Clear();
+
+                        // 다음 신호 대기
+                        break;
+                    }
+                    else if (data.IndexOf('>') != -1) // 중간에 있는 경우
+                    {
+                        // 잘라서 붙이고 Send
+                        //sb.Append(data.Substring(0, data.IndexOf('>') + 1));
+
+
+                        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
+                        showMessage(Rx_ReceiveTB, $"받은 데이터 {data}", "");
+
+                        ClientInfo clientInfo = new ClientInfo();
+                        clientInfo.socket = client;
+                        clientInfo.message = data.Substring(0, data.IndexOf('>') + 1);
+                        //m_clientInfo.Enqueue(clientInfo);
+                        Rx_BoxDataWrite();
+                        Rx_RequestMsgWrite();
+                        AssignReceiveData(); => 자동응답처리 메소드 구현
+
+                        // sb 초기화
+                        //sb.Clear();
+
+                        // 나머지 다시 while문으로 
+                        data = data.Substring(data.IndexOf('>'));
+                        continue;
+                    }
+                    else // > 없는경우
+                    {
+                        // 붙이고 
+                        //sb.Append(data);
+
+                        // 다음 신호 대기
+                        break;
+                    }
+                }
+                else  // < 없는경우
+                {
+                    // 다음 신호 대기
+                    break;
+                }
+            }
+            /*
+                        if (binary[0] == 60)
+                        {
+                            count++;
+                            byteCount += length;
+
+                            if (binary[length - 2] == 62)
+                            {
+                                sb.Append(data);
+
+                                showMessage(Rx_ReceiveTB, $"{count}회에 거쳐서 {byteCount}byte 수신", "");
+                                showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", "");
+
+                                ClientInfo clientInfo = new ClientInfo();
+                                clientInfo.socket = streamSocket;
+                                clientInfo.message = sb.ToString();
+                                m_clientInfo.Enqueue(clientInfo);
+
+                                Rx_BoxDataWrite();
+                                Rx_RequestMsgWrite();
+
+                                byteCount = 0;
+                                count = 0;
+                                sb.Clear();
+                            }
+                            else
+                            {
+                                sb.Append(data);
+                            }
+                        }
+                        else
+                        {
+                            count++;
+                            byteCount += length;
+
+                            if (binary[length - 2] != 62)
+                            {
+                                sb.Append(data);
+                            }
+                            else if (binary[length - 2] == 62)
+                            {
+                                sb.Append(data);
+
+                                showMessage(Rx_ReceiveTB, $"{count}회에 거쳐서 {byteCount}byte 수신", "");
+                                showMessage(Rx_ReceiveTB, $"받은 데이터 {sb}", "");
+
+                                ClientInfo clientInfo = new ClientInfo();
+                                clientInfo.socket = streamSocket;
+                                clientInfo.message = sb.ToString();
+                                m_clientInfo.Enqueue(clientInfo);
+
+                                Rx_BoxDataWrite();
+                                Rx_RequestMsgWrite();
+
+                                byteCount = 0;
+                                count = 0;
+                                sb.Clear();
+                            }
+                        }*/
+        }
 
         private void Rx_RespBtn_Click(object sender, EventArgs e)
         {
