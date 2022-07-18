@@ -1,9 +1,11 @@
 # C# Winform
 
 ## 카테고리
-- Winform_Basic : Winform의 기본적인 컨트롤 관련 코드 모음
-- Winform_Excel : Excel 관련 코드 모음
-- Winform_Network : Network 관련 코드 모음
+- Winform_Basic : Winform의 기본적인 컨트롤 프로그래밍
+- Winform_Excel : Winform에서의 Excel 프로그래밍
+- Winform_Network : Winform에서의 Network 프로그래밍
+- Winform_MetroUI : MS UI 프레임워크
+- Winform_GDI : Winform에서 GDI+를 사용한 그래픽 프로그래밍
 
 ### 학습환경
 - Visual Studio 2022
