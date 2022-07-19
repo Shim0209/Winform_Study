@@ -28,8 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // RectTracker
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Name = "RectTracker";
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.RectTracker_Paint);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.RectTracker_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RectTracker_MouseUp);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
