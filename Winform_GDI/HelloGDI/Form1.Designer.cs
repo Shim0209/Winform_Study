@@ -40,6 +40,8 @@
             this.Btn_CreateNewRegion = new System.Windows.Forms.Button();
             this.Btn_Test = new System.Windows.Forms.Button();
             this.Btn_CreateNewRectangle = new System.Windows.Forms.Button();
+            this.Btn_ROI = new System.Windows.Forms.Button();
+            this.Btn_ROISave = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Btn_DrawLine
@@ -54,7 +56,7 @@
             // 
             // Btn_FormClear
             // 
-            this.Btn_FormClear.Location = new System.Drawing.Point(563, 315);
+            this.Btn_FormClear.Location = new System.Drawing.Point(563, 331);
             this.Btn_FormClear.Name = "Btn_FormClear";
             this.Btn_FormClear.Size = new System.Drawing.Size(161, 23);
             this.Btn_FormClear.TabIndex = 1;
@@ -104,9 +106,9 @@
             // 
             // Pn_DrawImage
             // 
-            this.Pn_DrawImage.Location = new System.Drawing.Point(315, 12);
+            this.Pn_DrawImage.Location = new System.Drawing.Point(12, 12);
             this.Pn_DrawImage.Name = "Pn_DrawImage";
-            this.Pn_DrawImage.Size = new System.Drawing.Size(242, 326);
+            this.Pn_DrawImage.Size = new System.Drawing.Size(545, 297);
             this.Pn_DrawImage.TabIndex = 6;
             // 
             // Btn_DrawFillEllipse
@@ -158,11 +160,34 @@
             this.Btn_CreateNewRectangle.UseVisualStyleBackColor = true;
             this.Btn_CreateNewRectangle.Click += new System.EventHandler(this.Btn_CreateNewRectangle_Click);
             // 
+            // Btn_ROI
+            // 
+            this.Btn_ROI.Location = new System.Drawing.Point(563, 273);
+            this.Btn_ROI.Name = "Btn_ROI";
+            this.Btn_ROI.Size = new System.Drawing.Size(161, 23);
+            this.Btn_ROI.TabIndex = 12;
+            this.Btn_ROI.Text = "ROI";
+            this.Btn_ROI.UseVisualStyleBackColor = true;
+            this.Btn_ROI.Click += new System.EventHandler(this.Btn_ROI_Click);
+            // 
+            // Btn_ROISave
+            // 
+            this.Btn_ROISave.Location = new System.Drawing.Point(563, 302);
+            this.Btn_ROISave.Name = "Btn_ROISave";
+            this.Btn_ROISave.Size = new System.Drawing.Size(161, 23);
+            this.Btn_ROISave.TabIndex = 13;
+            this.Btn_ROISave.Text = "ROI_Save";
+            this.Btn_ROISave.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.Btn_ROISave.UseVisualStyleBackColor = true;
+            this.Btn_ROISave.Click += new System.EventHandler(this.Btn_ROISave_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(729, 344);
+            this.ClientSize = new System.Drawing.Size(729, 364);
+            this.Controls.Add(this.Btn_ROISave);
+            this.Controls.Add(this.Btn_ROI);
             this.Controls.Add(this.Btn_CreateNewRectangle);
             this.Controls.Add(this.Btn_Test);
             this.Controls.Add(this.Btn_CreateNewRegion);
@@ -195,6 +220,8 @@
         private System.Windows.Forms.Button Btn_CreateNewRegion;
         private System.Windows.Forms.Button Btn_Test;
         private System.Windows.Forms.Button Btn_CreateNewRectangle;
+        private System.Windows.Forms.Button Btn_ROI;
+        private System.Windows.Forms.Button Btn_ROISave;
     }
 }
 

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 // [[ Graphics객체를 만드는 방법 ]]
@@ -31,9 +26,13 @@ namespace HelloGDI
 {
     public partial class Form1 : Form
     {
+        RectTracker CSharpTracker;
+
         public Form1()
         {
             InitializeComponent();
+
+            CSharpTracker = new RectTracker();
         }
 
         #region FormClear
@@ -238,6 +237,29 @@ namespace HelloGDI
 
             shape.Dispose();
         }
+
         #endregion
+
+        private void Btn_ROI_Click(object sender, EventArgs e)
+        {
+            Button ROI_Area = new Button();
+
+            ROI_Area.BringToFront();
+
+            ROI_Area.Capture = false;
+
+            if (this.Controls.Contains(CSharpTracker))
+                this.Controls.Remove(CSharpTracker);
+            CSharpTracker = new RectTracker((Control)ROI_Area);
+
+            this.Controls.Add(CSharpTracker);
+            CSharpTracker.BringToFront();
+            CSharpTracker.Draw();
+        }
+
+        private void Btn_ROISave_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
