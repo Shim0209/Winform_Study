@@ -67,8 +67,10 @@ namespace RectTrackerSharp
 			get {return currentControl;}
 			set 
 			{
+                Console.WriteLine("Control set - Start");
                 currentControl = value;
                 Rect = currentControl.Bounds;
+                Console.WriteLine("Control set - End");
             }
 		}
 		
@@ -99,12 +101,14 @@ namespace RectTrackerSharp
 			get {return baseRect;}
 			set 
 			{
-				int X = Sqare.Width;
+                Console.WriteLine("Rect set - Start");
+                int X = Sqare.Width;
 				int Y = Sqare.Height;
 				int Height = value.Height;
 				int Width = value.Width;
 				baseRect = new Rectangle(X,Y,Width,Height);
 				SetRectangles();
+                Console.WriteLine("Rect set - End");
 			}
 			
 		}
@@ -163,7 +167,7 @@ namespace RectTrackerSharp
 
         public void Draw(Control Parent, Brush color)
         {
-            Console.WriteLine("Draw() - Start");
+            Console.WriteLine("Draw(Control Parent, Brush color) - Start");
             try
             {
                 g.FillRectangle(color, ControlRect);
@@ -190,7 +194,7 @@ namespace RectTrackerSharp
             {
                 MessageBox.Show(ex.Message);
             }
-            Console.WriteLine("Draw() - End");
+            Console.WriteLine("Draw(Control Parent, Brush color) - End");
         }
 
         private void OnFocus(object sender, EventArgs e)
@@ -456,6 +460,7 @@ namespace RectTrackerSharp
         #endregion
         public void StartTracking(Control ctl)
         {
+            Console.WriteLine("StartTracking( Control ctl ) - Start");
             if ((ctl != null) && (ctl.Parent != null))
             {
                 ctl.BringToFront();
@@ -473,9 +478,11 @@ namespace RectTrackerSharp
                 this.BringToFront();
                 this.Draw();
             }
+            Console.WriteLine("StartTracking( Control ctl ) - End");
         }
         private void Arrow_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
+            Console.WriteLine("Arrow_PreviewKeyDown() - Start");
             switch (e.KeyCode)
             {
                 case Keys.Up:
@@ -491,6 +498,7 @@ namespace RectTrackerSharp
                     e.IsInputKey = true;
                     break;
             }
+            Console.WriteLine("Arrow_PreviewKeyDown() - End");
         }
         public void Mouse_Move(object sender,System.Windows.Forms.MouseEventArgs e)
 		{
