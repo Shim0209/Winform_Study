@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RectTrackerSharp;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -254,7 +255,7 @@ namespace HelloGDI
 
             this.Controls.Add(CSharpTracker);
             CSharpTracker.BringToFront();
-            CSharpTracker.Draw();
+            CSharpTracker.Draw(Pn_DrawImage, Brushes.BlueViolet);
         }
 
         private void Btn_ROISave_Click(object sender, EventArgs e)
