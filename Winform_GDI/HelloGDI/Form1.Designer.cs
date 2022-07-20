@@ -41,7 +41,7 @@
             this.Btn_Test = new System.Windows.Forms.Button();
             this.Btn_CreateNewRectangle = new System.Windows.Forms.Button();
             this.Btn_ROI = new System.Windows.Forms.Button();
-            this.Btn_ROISave = new System.Windows.Forms.Button();
+            this.Btn_ROI2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Btn_DrawLine
@@ -56,7 +56,7 @@
             // 
             // Btn_FormClear
             // 
-            this.Btn_FormClear.Location = new System.Drawing.Point(563, 331);
+            this.Btn_FormClear.Location = new System.Drawing.Point(563, 565);
             this.Btn_FormClear.Name = "Btn_FormClear";
             this.Btn_FormClear.Size = new System.Drawing.Size(161, 23);
             this.Btn_FormClear.TabIndex = 1;
@@ -108,7 +108,7 @@
             // 
             this.Pn_DrawImage.Location = new System.Drawing.Point(12, 12);
             this.Pn_DrawImage.Name = "Pn_DrawImage";
-            this.Pn_DrawImage.Size = new System.Drawing.Size(545, 297);
+            this.Pn_DrawImage.Size = new System.Drawing.Size(545, 313);
             this.Pn_DrawImage.TabIndex = 6;
             // 
             // Btn_DrawFillEllipse
@@ -143,7 +143,7 @@
             // 
             // Btn_Test
             // 
-            this.Btn_Test.Location = new System.Drawing.Point(211, 315);
+            this.Btn_Test.Location = new System.Drawing.Point(459, 331);
             this.Btn_Test.Name = "Btn_Test";
             this.Btn_Test.Size = new System.Drawing.Size(98, 23);
             this.Btn_Test.TabIndex = 10;
@@ -170,23 +170,23 @@
             this.Btn_ROI.UseVisualStyleBackColor = true;
             this.Btn_ROI.Click += new System.EventHandler(this.Btn_ROI_Click);
             // 
-            // Btn_ROISave
+            // Btn_ROI2
             // 
-            this.Btn_ROISave.Location = new System.Drawing.Point(563, 302);
-            this.Btn_ROISave.Name = "Btn_ROISave";
-            this.Btn_ROISave.Size = new System.Drawing.Size(161, 23);
-            this.Btn_ROISave.TabIndex = 13;
-            this.Btn_ROISave.Text = "ROI_Save";
-            this.Btn_ROISave.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.Btn_ROISave.UseVisualStyleBackColor = true;
-            this.Btn_ROISave.Click += new System.EventHandler(this.Btn_ROISave_Click);
+            this.Btn_ROI2.Location = new System.Drawing.Point(563, 302);
+            this.Btn_ROI2.Name = "Btn_ROI2";
+            this.Btn_ROI2.Size = new System.Drawing.Size(161, 23);
+            this.Btn_ROI2.TabIndex = 13;
+            this.Btn_ROI2.Text = "ROI2";
+            this.Btn_ROI2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.Btn_ROI2.UseVisualStyleBackColor = true;
+            this.Btn_ROI2.Click += new System.EventHandler(this.Btn_ROI2_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(729, 364);
-            this.Controls.Add(this.Btn_ROISave);
+            this.ClientSize = new System.Drawing.Size(732, 600);
+            this.Controls.Add(this.Btn_ROI2);
             this.Controls.Add(this.Btn_ROI);
             this.Controls.Add(this.Btn_CreateNewRectangle);
             this.Controls.Add(this.Btn_Test);
@@ -221,7 +221,7 @@
         private System.Windows.Forms.Button Btn_Test;
         private System.Windows.Forms.Button Btn_CreateNewRectangle;
         private System.Windows.Forms.Button Btn_ROI;
-        private System.Windows.Forms.Button Btn_ROISave;
+        private System.Windows.Forms.Button Btn_ROI2;
     }
 }
 

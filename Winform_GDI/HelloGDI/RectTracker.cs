@@ -15,12 +15,11 @@ namespace RectTrackerSharp
         int nPicBoxY;
 
         Brush colorSelect;
+
         /// <summary> 
         /// Required designer variable.
         /// </summary>
         /// 
-
-
         private System.ComponentModel.Container components = null;
 		//original rect
 		Rectangle baseRect;
@@ -112,7 +111,6 @@ namespace RectTrackerSharp
 			}
 			
 		}
-		
 
 		/// <summary>
 		/// Set the Sqares positions
@@ -200,6 +198,7 @@ namespace RectTrackerSharp
         private void OnFocus(object sender, EventArgs e)
         {
             Console.WriteLine("OnFocus() - Start");
+            //g.Clear(Color.BlueViolet);
             g.FillRectangles(Brushes.White, SmallRect);
             this.Location = new Point(this.Left, this.Top);
             Console.WriteLine("OnFocus() - End");
@@ -208,7 +207,8 @@ namespace RectTrackerSharp
         private void OnDeFocus(object sender, EventArgs e)
         {
             Console.WriteLine("OnDeFocus() - Start");
-            g.FillRectangles(colorSelect, SmallRect);
+            g.Clear(Color.BlueViolet);
+            //g.FillRectangles(colorSelect, SmallRect);
             this.Location = new Point(this.Left, this.Top);
             Console.WriteLine("OnDeFocus() - End");
         }
@@ -369,6 +369,7 @@ namespace RectTrackerSharp
             g = this.CreateGraphics();
             Console.WriteLine("Create(int moveX, int moveY, int moveHeight, int moveWidt) - End");
         }
+
         /// <summary>
         /// Transparents the control area in the tracker
         /// </summary>
@@ -402,6 +403,7 @@ namespace RectTrackerSharp
             Console.WriteLine("BuildFrame() - End");
 			return path;
 		}
+
 		/// <summary> 
 		/// Clean up any resources being used.
 		/// </summary>
@@ -688,7 +690,8 @@ namespace RectTrackerSharp
 		{
             Console.WriteLine("RectTracker_Paint() - Start");
             //redraw sqares
-            Draw(ROIparent, colorSelect);
+            //Draw(ROIparent, colorSelect);
+            Draw(this.Parent, colorSelect);
             Console.WriteLine("RectTracker_Paint() - End");
 		}
 		private void RectTracker_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)

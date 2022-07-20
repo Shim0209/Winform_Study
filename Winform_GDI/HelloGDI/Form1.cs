@@ -28,12 +28,11 @@ namespace HelloGDI
     public partial class Form1 : Form
     {
         RectTracker CSharpTracker;
+        MyRectTracker MyRectTracker;
 
         public Form1()
         {
             InitializeComponent();
-
-            CSharpTracker = new RectTracker();
         }
 
         #region FormClear
@@ -244,6 +243,9 @@ namespace HelloGDI
         private void Btn_ROI_Click(object sender, EventArgs e)
         {
             Button ROI_Area = new Button();
+            Label label = new Label();
+            
+
 
             ROI_Area.BringToFront();
 
@@ -252,15 +254,29 @@ namespace HelloGDI
             if (this.Controls.Contains(CSharpTracker))
                 this.Controls.Remove(CSharpTracker);
             CSharpTracker = new RectTracker((Control)ROI_Area);
+            label = CSharpTracker.roiLabel;
+            label.Text = "hi";
+            label.Parent = Pn_DrawImage;
 
             this.Controls.Add(CSharpTracker);
             CSharpTracker.BringToFront();
             CSharpTracker.Draw(Pn_DrawImage, Brushes.BlueViolet);
         }
 
-        private void Btn_ROISave_Click(object sender, EventArgs e)
+        private void Btn_ROI2_Click(object sender, EventArgs e)
         {
+            Button ROI_Control = new Button();
 
+            ROI_Control.BringToFront();
+            ROI_Control.Capture = false;
+
+            if (this.Controls.Contains(MyRectTracker))
+                this.Controls.Remove(MyRectTracker);
+            MyRectTracker = new MyRectTracker((Control)ROI_Control);
+
+            this.Controls.Add(MyRectTracker);
+            MyRectTracker.BringToFront();
+            MyRectTracker.Draw(Pn_DrawImage, Brushes.BlueViolet);
         }
     }
 }
