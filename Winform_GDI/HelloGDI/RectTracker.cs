@@ -517,14 +517,14 @@ namespace RectTrackerSharp
 				return;
 			}
 
-            if (currentControl.Height > nPicBoxY)
+            if (currentControl.Height > this.Height)
             {
-                currentControl.Height = nPicBoxY;
+                currentControl.Height = this.Height;
                 return;
             }
-            else if (currentControl.Width > nPicBoxX)
+            else if (currentControl.Width > this.Width)
             {
-                currentControl.Width = nPicBoxX;
+                currentControl.Width = this.Width;
                 return;
             }
 

@@ -276,7 +276,7 @@ namespace HelloGDI
 
             this.Controls.Add(MyRectTracker);
             MyRectTracker.BringToFront();
-            MyRectTracker.Draw(Pn_DrawImage, Brushes.BlueViolet);
+            MyRectTracker.Draw(Pn_DrawImage, Brushes.Blue);
         }
     }
 }
