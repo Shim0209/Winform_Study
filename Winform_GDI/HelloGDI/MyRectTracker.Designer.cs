@@ -54,6 +54,7 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MyRectTracker_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MyRectTracker_KeyUp);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MyRectTracker_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MyRectTracker_MouseUp);
             this.ResumeLayout(false);
             this.PerformLayout();
 

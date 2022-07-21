@@ -9,13 +9,16 @@ namespace HelloGDI
     {
         #region Properties
         Control _currentControl; // 현재 컨트롤
-        Rectangle _baseRect; // 현재 컨트롤과 같은 크기의 사각 도형
         Rectangle _trackerRect; // Tracker 크기의 사각 도형
         Rectangle[] _trackerPoint = new Rectangle[8]; // 트랙커 포인트 ( 꼭지점 4개, 선 중앙 4개 )
-        Rectangle _rect;
+        Rectangle _rect; // 현재 컨트롤과 같은 크기의 사각 도형
         Graphics _graphics; // 그리기 위한 오브젝트
         Brush _brush; // Tracker 프레임 색상
-        
+
+        int _PicBoxX;
+        int _PicBoxY;
+        int lineBold;
+
         private bool isFirst = true;
         private Point prevLeftClick;
         bool reSizerect = false;
@@ -33,6 +36,20 @@ namespace HelloGDI
         }
         //currently resize mouse location
         private RESIZE_BORDER CurrBorder;
+
+        public Rectangle Rect
+        {
+            get { return _rect; }
+            set
+            {
+                int X = PointSize.Width;
+                int Y = PointSize.Height;
+                int Height = value.Height;
+                int Width = value.Width;
+                _rect = new Rectangle(X, Y, Width, Height);
+                SetTrackerPoint();
+            }
+        }
         #endregion
 
 
@@ -82,12 +99,7 @@ namespace HelloGDI
             // Control 크기에 맞춰 Tracker 크기값 구하기 and Tracker 크기 변경
             ChangeTrackerSize();
 
-
-            // Tracker Point 8개 값 구하기
-            SetTrackerPoint();
-
             // Control 크기의 사각도형(baseRect)값, Tracker 크기의 사각도형(trackerRect)값 구하기
-            SetBaseRect();
             SetTrackerRect();
 
             // Tracker 선(Frame) 만들기 
@@ -108,7 +120,7 @@ namespace HelloGDI
 
             this.BringToFront();
 
-            _rect = _currentControl.Bounds;
+            Rect = _currentControl.Bounds;
 
             Console.WriteLine("ChangeTrackerSize() - End");
         }
@@ -116,28 +128,26 @@ namespace HelloGDI
         {
             Console.WriteLine("SetTrackerPoint() - Start");
             //TopLeft
-            _trackerPoint[0] = new Rectangle(new Point(_baseRect.X - PointSize.Width, _baseRect.Y - PointSize.Height), PointSize);
+            _trackerPoint[0] = new Rectangle(new Point(_rect.X - PointSize.Width, _rect.Y - PointSize.Height), PointSize);
             //TopRight
-            _trackerPoint[1] = new Rectangle(new Point(_baseRect.X + _baseRect.Width, _baseRect.Y - PointSize.Height), PointSize);
+            _trackerPoint[1] = new Rectangle(new Point(_rect.X + _rect.Width, _rect.Y - PointSize.Height), PointSize);
             //BottomLeft
-            _trackerPoint[2] = new Rectangle(new Point(_baseRect.X - PointSize.Width, _baseRect.Y + _baseRect.Height), PointSize);
+            _trackerPoint[2] = new Rectangle(new Point(_rect.X - PointSize.Width, _rect.Y + _rect.Height), PointSize);
             //BottomRight
-            _trackerPoint[3] = new Rectangle(new Point(_baseRect.X + _baseRect.Width, _baseRect.Y + _baseRect.Height), PointSize);
+            _trackerPoint[3] = new Rectangle(new Point(_rect.X + _rect.Width, _rect.Y + _rect.Height), PointSize);
             //TopMiddle
-            _trackerPoint[4] = new Rectangle(new Point(_baseRect.X + (_baseRect.Width / 2) - (PointSize.Width / 2), _baseRect.Y - PointSize.Height), PointSize);
+            _trackerPoint[4] = new Rectangle(new Point(_rect.X + (_rect.Width / 2) - (PointSize.Width / 2), _rect.Y - PointSize.Height), PointSize);
             //BottomMiddle
-            _trackerPoint[5] = new Rectangle(new Point(_baseRect.X + (_baseRect.Width / 2) - (PointSize.Width / 2), _baseRect.Y + _baseRect.Height), PointSize);
+            _trackerPoint[5] = new Rectangle(new Point(_rect.X + (_rect.Width / 2) - (PointSize.Width / 2), _rect.Y + _rect.Height), PointSize);
             //LeftMiddle
-            _trackerPoint[6] = new Rectangle(new Point(_baseRect.X - PointSize.Width, _baseRect.Y + (_baseRect.Height / 2) - (PointSize.Height / 2)), PointSize);
+            _trackerPoint[6] = new Rectangle(new Point(_rect.X - PointSize.Width, _rect.Y + (_rect.Height / 2) - (PointSize.Height / 2)), PointSize);
             //RightMiddle
-            _trackerPoint[7] = new Rectangle(new Point(_baseRect.X + _baseRect.Width, _baseRect.Y + (_baseRect.Height / 2) - (PointSize.Height / 2)), PointSize);
+            _trackerPoint[7] = new Rectangle(new Point(_rect.X + _rect.Width, _rect.Y + (_rect.Height / 2) - (PointSize.Height / 2)), PointSize);
+            
+            // Tracker Point 8개 값 구하기
+            SetTrackerRect();
+
             Console.WriteLine("SetTrackerPoint() - End");
-        }
-        private void SetBaseRect()
-        {
-            Console.WriteLine("SetBaseRect() - Start");
-            _baseRect = new Rectangle(PointSize.Width, PointSize.Height, _currentControl.Bounds.Width, _currentControl.Bounds.Height);
-            Console.WriteLine("SetBaseRect() - End");
         }
         private void SetTrackerRect()
         {
@@ -173,9 +183,6 @@ namespace HelloGDI
         #endregion
 
 
-
-
-
         #region Draw
         public void Draw(Control parent, Brush color)
         {
@@ -193,6 +200,9 @@ namespace HelloGDI
 
                 // Tracker 프레임 색상 저장
                 _brush = color;
+
+                _PicBoxX = parent.Size.Width;
+                _PicBoxY = parent.Size.Height;
 
                 // 포커스 
                 this.Focus();
@@ -230,7 +240,8 @@ namespace HelloGDI
         private void Mouse_Move(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Console.WriteLine("Mouse_Move() - Start");
-            //minimum size for the control is 8x8
+
+            // 컨트롤 최소크기 8x8
             if (_currentControl.Height < 8)
             {
                 _currentControl.Height = 8;
@@ -242,6 +253,7 @@ namespace HelloGDI
                 return;
             }
 
+            // 컨트롤은 Tracker보다 클수 없음. 클경우 동일하게 설정
             if (_currentControl.Height > this.Height)
             {
                 _currentControl.Height = this.Height;
@@ -277,9 +289,9 @@ namespace HelloGDI
                         _currentControl.Top = _currentControl.Top + e.Y - prevLeftClick.Y;
                     _currentControl.Width = _currentControl.Width + e.X - prevLeftClick.X;
 
-                    if (_currentControl.Width + _currentControl.Left >= this.Width)
+                    if (_currentControl.Width + _currentControl.Left >= _PicBoxX)
                     {
-                        _currentControl.Width = this.Width - _currentControl.Left;
+                        _currentControl.Width = _PicBoxX - _currentControl.Left;
                         _currentControl.Left = _currentControl.Left;
                     }
 
@@ -287,9 +299,9 @@ namespace HelloGDI
                 case RESIZE_BORDER.RB_RIGHT:
                     reSizerect = true;
                     _currentControl.Width = _currentControl.Width + e.X - prevLeftClick.X;
-                    if (_currentControl.Width + _currentControl.Left >= this.Width)
+                    if (_currentControl.Width + _currentControl.Left >= _PicBoxX)
                     {
-                        _currentControl.Width = this.Width - _currentControl.Left;
+                        _currentControl.Width = _PicBoxX - _currentControl.Left;
                         _currentControl.Left = _currentControl.Left;
                     }
 
@@ -298,9 +310,9 @@ namespace HelloGDI
                     reSizerect = true;
                     _currentControl.Height = _currentControl.Height + e.Y - prevLeftClick.Y;
 
-                    if (_currentControl.Height + _currentControl.Top >= this.Height)
+                    if (_currentControl.Height + _currentControl.Top >= _PicBoxY)
                     {
-                        _currentControl.Height = this.Height - _currentControl.Top;
+                        _currentControl.Height = _PicBoxY - _currentControl.Top;
                         _currentControl.Top = _currentControl.Top;
                     }
                     break;
@@ -312,9 +324,9 @@ namespace HelloGDI
                     if (_currentControl.Width > 8)
                         _currentControl.Left = _currentControl.Left + e.X - prevLeftClick.X;
 
-                    if (_currentControl.Height + _currentControl.Top >= this.Height)
+                    if (_currentControl.Height + _currentControl.Top >= _PicBoxY)
                     {
-                        _currentControl.Height = this.Height - _currentControl.Top;
+                        _currentControl.Height = _PicBoxY - _currentControl.Top;
                         _currentControl.Top = _currentControl.Top;
                     }
                     break;
@@ -323,15 +335,15 @@ namespace HelloGDI
                     _currentControl.Height = _currentControl.Height + e.Y - prevLeftClick.Y;
                     _currentControl.Width = _currentControl.Width + e.X - prevLeftClick.X;
 
-                    if (_currentControl.Width + _currentControl.Left >= this.Width)
+                    if (_currentControl.Width + _currentControl.Left >= _PicBoxX)
                     {
-                        _currentControl.Width = this.Width - _currentControl.Left;
+                        _currentControl.Width = _PicBoxX - _currentControl.Left;
                         _currentControl.Left = _currentControl.Left;
                     }
 
-                    if (_currentControl.Height + _currentControl.Top >= this.Height)
+                    if (_currentControl.Height + _currentControl.Top >= _PicBoxY)
                     {
-                        _currentControl.Height = this.Height - _currentControl.Top;
+                        _currentControl.Height = _PicBoxY - _currentControl.Top;
                         _currentControl.Top = _currentControl.Top;
                     }
 
@@ -355,53 +367,54 @@ namespace HelloGDI
         {
             Console.WriteLine("Hit_Test() - Start");
             //Check if the point is somewhere on the tracker
+            // 마우스의 위치가 Tracker 위에 없다면
             if (!_trackerRect.Contains(point))
             {
                 //should never happen
                 Cursor.Current = Cursors.Arrow;
 
                 return false;
-            }
+            } // 마우스 위치가 TopLeft
             else if (_trackerPoint[0].Contains(point))      // Cursor on TopLeft Point
             {
                 Cursor.Current = Cursors.SizeNWSE;
                 CurrBorder = RESIZE_BORDER.RB_TOPLEFT;
-            }
+            } // 마우스 위치가 BottomRight
             else if (_trackerPoint[3].Contains(point))      // Cursor on BottomRight Point
             {
                 Cursor.Current = Cursors.SizeNWSE;
                 CurrBorder = RESIZE_BORDER.RB_BOTTOMRIGHT;
-            }
+            } // 마우스 위치가 TopRight
             else if (_trackerPoint[1].Contains(point))      // Cursor on TopRight Point
             {
                 Cursor.Current = Cursors.SizeNESW;
                 CurrBorder = RESIZE_BORDER.RB_TOPRIGHT;
-            }
+            } // 마우스 위치가 BottomLeft
             else if (_trackerPoint[2].Contains(point))      // Cursor on BottomLeft Point
             {
                 Cursor.Current = Cursors.SizeNESW;
                 CurrBorder = RESIZE_BORDER.RB_BOTTOMLEFT;
-            }
+            } // 마우스 위치가 TopMiddle
             else if (_trackerPoint[4].Contains(point))      // Cursor on TopMiddle Point
             {
                 Cursor.Current = Cursors.SizeNS;
                 CurrBorder = RESIZE_BORDER.RB_TOP;
-            }
+            } // 마우스 위치가 BottomMiddle
             else if (_trackerPoint[5].Contains(point))      // Cursor on BottomMiddle Point
             {
                 Cursor.Current = Cursors.SizeNS;
                 CurrBorder = RESIZE_BORDER.RB_BOTTOM;
-            }
+            } // 마우스 위치가 LeftMiddle
             else if (_trackerPoint[6].Contains(point))      // Cursor on LeftMiddle Point
             {
                 Cursor.Current = Cursors.SizeWE;
                 CurrBorder = RESIZE_BORDER.RB_LEFT;
-            }
+            } // 마우스 위치가 RightMiddle
             else if (_trackerPoint[7].Contains(point))      // // Cursor on RightMiddle Point
             {
                 Cursor.Current = Cursors.SizeWE;
                 CurrBorder = RESIZE_BORDER.RB_RIGHT;
-            }
+            } // 마우스 위치가 Point가 아닌 Tracker위에 있다면
             else if (_trackerRect.Contains(point))
             {
                 Cursor.Current = Cursors.SizeAll;
@@ -418,13 +431,24 @@ namespace HelloGDI
 
         #endregion
 
-        // 컨트롤을 다시 그리면 발생
+        // 컨트롤을 다시 그리면 Tracker도 다시 그리기
         private void MyRectTracker_Paint(object sender, PaintEventArgs e)
         {
-
+            Draw(this.Parent, _brush);
         }
 
-        // 마우스 포인터를 컨트롤 위로 이동하면 발생
+        // 마우스 포인터를 컨트롤 위로 이동하면
+        // 1. 좌측 클릭여부 검사
+        // 2. 좌측 클릭 아닌경우
+        //      - Tracker 위의 마우스 위치 정보 추적
+        //      - isFirst, Visible 속성 초기화
+        // 3. 좌측 클릭인 경우
+        // 3-1 isFirst가 True이면
+        //      - 마우스 첫 클릭위치 저장
+        //      - isFirst False 변경
+        // 3-2 isFirst가 False이면
+        //      - Visible True 변경
+        //      - 
         private void MyRectTracker_MouseMove(object sender, MouseEventArgs e)
         {
             // 마우스 커서 화살표 방향 설정
@@ -462,6 +486,7 @@ namespace HelloGDI
                         //prevLeftClick = new Point(e.X, e.Y);
 
                         //this.roiLabel.Location = new Point(this.Left, this.Top - 15);
+                        this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
                     }
                     else if (reSizerect)
                     {
@@ -486,12 +511,69 @@ namespace HelloGDI
         private void MyRectTracker_LocationChanged(object sender, EventArgs e)
         {
             // Parent Control 범위에서 벗어나지 못하도록 할 것
+            lineBold = PointSize.Height;
+
+            if (this.Left < 0)
+            {
+                this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                _currentControl.Location = new Point(this.Left + lineBold, this.Top + lineBold);
+                //currentControl.Size = new Size(this.Width, this.Height);
+            }
+
+            if (this.Top < 20)
+            {
+                this.Lb_Main.Location = new Point(this.Left, this.Top + this.Height + 5);
+                _currentControl.Location = new Point(this.Left + lineBold, this.Top + lineBold);
+                //currentControl.Size = new Size(this.Width, this.Height);
+            }
+
+            if ((this.Left >= 0) && (this.Top >= 20))
+            {
+                this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                _currentControl.Location = new Point(this.Left + lineBold, this.Top + lineBold);
+                //currentControl.Size = new Size(this.Width, this.Height);
+            }
+
+            if (this.Left + this.Width >= _PicBoxX)
+            {
+                if (this.Top < 20)
+                {
+                    this.Lb_Main.Location = new Point(this.Left, this.Top + this.Height + 5);
+                    _currentControl.Location = new Point(this.Left + lineBold, this.Top + lineBold);
+                    //currentControl.Size = new Size(this.Width, this.Height);
+                }
+                else
+                {
+                    this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                    _currentControl.Location = new Point(this.Left + lineBold, this.Top + lineBold);
+                    //currentControl.Size = new Size(this.Width, this.Height);
+                }
+            }
+
+            if (this.Top + this.Height >= _PicBoxY)
+            {
+                this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                _currentControl.Location = new Point(this.Left + lineBold, this.Top + lineBold);
+                //currentControl.Size = new Size(this.Width, this.Height);
+            }
+
+            //currentControl.Location = new Point(this.Left, this.Top);
+            //currentControl.Size = new Size(this.Width, this.Height);
+
+            _graphics = this.CreateGraphics();
+            TrackerCreate();
         }
 
         // Visible 속성 값이 변경되면 발생
         private void MyRectTracker_VisibleChanged(object sender, EventArgs e)
         {
-
+            if (this.Visible)
+            {
+                this.Lb_Main.Visible = true;
+                TrackerCreate();
+            }
+            else
+                this.Lb_Main.Visible = false;
         }
 
         // Size 속성 값이 변경되면 발생
@@ -510,6 +592,83 @@ namespace HelloGDI
         private void MyRectTracker_KeyDown(object sender, KeyEventArgs e)
         {
 
+        }
+
+        private void MyRectTracker_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (this.Focused)
+            {
+                TrackerCreate();
+                this.Visible = true;
+                if (this.Left < 0)
+                {
+                    this.Left = 0;
+                    this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+
+                    if (this.Width >= _PicBoxX)
+                    {
+                        this.Width = _PicBoxX;
+                    }
+                }
+
+                if (this.Top < 20)
+                {
+                    if (this.Top < 0)
+                    {
+                        this.Top = 0;
+                    }
+                    this.Lb_Main.Location = new Point(this.Left, this.Top + this.Height + 5);
+
+                    if (this.Height >= _PicBoxY)
+                    {
+                        this.Height = _PicBoxY;
+                    }
+                }
+
+                if ((this.Left >= 0) && (this.Top >= 20))
+                {
+                    this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                }
+
+                if (this.Left + this.Width >= _PicBoxX)
+                {
+                    if (this.Width >= _PicBoxX)
+                    {
+                        this.Width = _PicBoxX - 1;
+                        this.Left = 0;
+                    }
+
+                    if (!reSizerect)
+                        this.Left = _PicBoxX - this.Width;
+                    if (reSizerect)
+                        this.Left = this.Left;
+                    this.Width = _PicBoxX - this.Left;
+
+                    if (this.Top < 20)
+                    {
+                        this.Lb_Main.Location = new Point(this.Left, this.Top + this.Height + 5);
+                    }
+                    else
+                    {
+                        this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                    }
+                }
+
+                if (this.Top + this.Height >= _PicBoxY)
+                {
+                    if (this.Height >= _PicBoxY)
+                    {
+                        this.Height = _PicBoxY;
+                    }
+                    this.Top = _PicBoxY - this.Height;
+                    this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                }
+
+
+            }
+
+            if (reSizerect)
+                reSizerect = false;
         }
     }
 }
