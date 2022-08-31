@@ -49,17 +49,17 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.btnMedia = new System.Windows.Forms.Button();
             this.panelLogo = new System.Windows.Forms.Panel();
             this.panePlayer = new System.Windows.Forms.Panel();
             this.panelChildForm = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.btnMedia = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panelToolsSubMenu.SuspendLayout();
             this.panelPlaylistSubMenu.SuspendLayout();
             this.panelMediaSubMenu.SuspendLayout();
-            this.panelChildForm.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panelLogo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -365,24 +365,9 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // btnMedia
-            // 
-            this.btnMedia.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnMedia.FlatAppearance.BorderSize = 0;
-            this.btnMedia.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMedia.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnMedia.Location = new System.Drawing.Point(0, 100);
-            this.btnMedia.Name = "btnMedia";
-            this.btnMedia.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnMedia.Size = new System.Drawing.Size(183, 45);
-            this.btnMedia.TabIndex = 1;
-            this.btnMedia.Text = "Media";
-            this.btnMedia.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMedia.UseVisualStyleBackColor = true;
-            this.btnMedia.Click += new System.EventHandler(this.btnMedia_Click);
-            // 
             // panelLogo
             // 
+            this.panelLogo.Controls.Add(this.pictureBox2);
             this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelLogo.Location = new System.Drawing.Point(0, 0);
             this.panelLogo.Name = "panelLogo";
@@ -401,23 +386,39 @@
             // panelChildForm
             // 
             this.panelChildForm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(30)))), ((int)(((byte)(45)))));
-            this.panelChildForm.Controls.Add(this.pictureBox1);
             this.panelChildForm.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelChildForm.Location = new System.Drawing.Point(200, 0);
             this.panelChildForm.Name = "panelChildForm";
             this.panelChildForm.Size = new System.Drawing.Size(734, 461);
             this.panelChildForm.TabIndex = 2;
             // 
-            // pictureBox1
+            // pictureBox2
             // 
-            this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(122, 67);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(498, 328);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Padding = new System.Windows.Forms.Padding(3);
+            this.pictureBox2.Size = new System.Drawing.Size(183, 100);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
+            // 
+            // btnMedia
+            // 
+            this.btnMedia.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnMedia.FlatAppearance.BorderSize = 0;
+            this.btnMedia.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMedia.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnMedia.Location = new System.Drawing.Point(0, 100);
+            this.btnMedia.Name = "btnMedia";
+            this.btnMedia.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnMedia.Size = new System.Drawing.Size(183, 45);
+            this.btnMedia.TabIndex = 1;
+            this.btnMedia.Text = "Media";
+            this.btnMedia.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMedia.UseVisualStyleBackColor = true;
+            this.btnMedia.Click += new System.EventHandler(this.btnMedia_Click);
             // 
             // panelSideMenu
             // 
@@ -436,8 +437,8 @@
             this.panelToolsSubMenu.ResumeLayout(false);
             this.panelPlaylistSubMenu.ResumeLayout(false);
             this.panelMediaSubMenu.ResumeLayout(false);
-            this.panelChildForm.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panelLogo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -445,7 +446,6 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnMedia;
         private System.Windows.Forms.Panel panelLogo;
         private System.Windows.Forms.Panel panelMediaSubMenu;
         private System.Windows.Forms.Button button5;
@@ -468,7 +468,8 @@
         private System.Windows.Forms.Button btnPlaylist;
         private System.Windows.Forms.Panel panePlayer;
         private System.Windows.Forms.Panel panelChildForm;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Button btnMedia;
     }
 }
 
