@@ -66,6 +66,7 @@ namespace ModernFlatUI
 
         private void btnEqualizer_Click(object sender, EventArgs e)
         {
+            openChildForm(new Form3());
             hideSubMenu();
         }
 
@@ -75,9 +76,24 @@ namespace ModernFlatUI
         }
         #endregion
 
-        private void openChildForm()
+        private Form activeForm = null;
+        private void openChildForm(Form childForm)
         {
-            // https://www.youtube.com/watch?v=JP5rgXO_5Sk 13:45부터
+            if (activeForm != null)
+                activeForm.Close();
+            activeForm = childForm;
+            childForm.TopLevel = false;
+            childForm.FormBorderStyle = FormBorderStyle.None;
+            childForm.Dock = DockStyle.Fill;
+            panelChildForm.Controls.Add(childForm);
+            panelChildForm.Tag = childForm;
+            childForm.BringToFront();
+            childForm.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            openChildForm(new Form2());
         }
     }
 }
