@@ -10,57 +10,15 @@ namespace RectTrackerSharp
     /// </summary>
     public class RectTracker : System.Windows.Forms.UserControl
 	{
-        Control ROIparent;
+        #region Properties
         int nPicBoxX;
         int nPicBoxY;
-
-        Brush colorSelect;
-
-        /// <summary> 
-        /// Required designer variable.
-        /// </summary>
-        /// 
-        private System.ComponentModel.Container components = null;
-		//original rect
-		Rectangle baseRect;
-		
-		//new rect with bounds
-		Rectangle ControlRect;
-
-		//all small rects
-		Rectangle[] SmallRect = new Rectangle[8];
-
-		//sqare size
-		Size Sqare = new Size(3,3);
-
         int lineBold;
-
-        //graphics object
-        Graphics g;
-
-		//the control that is tracked
-		Control currentControl;
-
-		// To store the location of previous mouse left click in the form
-		// so that we can use it to calculate the new form location during dragging
 		private Point prevLeftClick;
-
         bool reSizerect = false;
-
-        // To determine if it is the first time entry for every dragging of the form
+        private System.ComponentModel.Container components = null;
         private bool isFirst = true;
-
-		//defines the color surrounding the tracker
-		Color MyBackColor = Color.Red;
-		
-		//defines the color of the sqares
-		Color SqareColor = Color.White;
-
-		//defines the line color of the sqares 
-		Color SqareLineColor = Color.Black;
         public Label roiLabel;
-
-        //The Control the tracker is used on 
         public Control Control
 		{
 			get {return currentControl;}
@@ -72,10 +30,6 @@ namespace RectTrackerSharp
                 Console.WriteLine("Control set - End");
             }
 		}
-		
-		/// <summary>
-		/// keep track of which border of the box is to be resized.
-		/// </summary>
 		enum RESIZE_BORDER
 		{
 			RB_NONE = 0,
@@ -88,13 +42,7 @@ namespace RectTrackerSharp
 			RB_BOTTOMLEFT = 7,
 			RB_BOTTOMRIGHT = 8
 		}
-
-		//currently resize mouse location
 		private RESIZE_BORDER CurrBorder;
-
-		/// <summary>
-		/// The current position of the rectangle in client coordinates (pixels).
-		/// </summary>
 		public Rectangle Rect
 		{
 			get {return baseRect;}
@@ -111,11 +59,43 @@ namespace RectTrackerSharp
 			}
 			
 		}
+		public RectTracker(Control theControl)
+		{
+            Console.WriteLine("RectTracker(theControl) - Start");
+            // This call is required by the Windows.Forms Form Designer.
+            InitializeComponent();
+		
 
-		/// <summary>
-		/// Set the Sqares positions
-		/// </summary>
-		void SetRectangles()
+			//set the tracked control 
+			currentControl = theControl;
+			
+			//Create the tracker
+			Create();
+			
+            Console.WriteLine("RectTracker(theControl) - End");
+		}
+		public RectTracker()
+		{
+            Console.WriteLine("RectTracker() - Start");
+            // This call is required by the Windows.Forms Form Designer.
+            InitializeComponent();
+            Console.WriteLine("RectTracker() - End");
+		}
+        Control ROIparent;
+		Control currentControl;
+        Graphics g;
+        Brush colorSelect;
+		Rectangle baseRect;
+		Rectangle ControlRect;
+		Rectangle[] SmallRect = new Rectangle[8];
+		Size Sqare = new Size(3,3);
+		Color MyBackColor = Color.Red;
+		Color SqareColor = Color.White;
+		Color SqareLineColor = Color.Black;
+        #endregion
+
+        #region Function
+        void SetRectangles()
 		{
             Console.WriteLine("SetRectangles() - Start");
 			//TopLeft
@@ -139,10 +119,6 @@ namespace RectTrackerSharp
 			ControlRect = new Rectangle(new Point(0,0),this.Bounds.Size);
             Console.WriteLine("SetRectangles() - End");
         }
-
-		/// <summary>
-		/// Draws Sqares
-		/// </summary>
 		public void Draw()
 		{
             Console.WriteLine("Draw() - Start");
@@ -162,7 +138,6 @@ namespace RectTrackerSharp
             }
             Console.WriteLine("Draw() - End");
         }
-
         public void Draw(Control Parent, Brush color)
         {
             Console.WriteLine("Draw(Control Parent, Brush color) - Start");
@@ -194,7 +169,6 @@ namespace RectTrackerSharp
             }
             Console.WriteLine("Draw(Control Parent, Brush color) - End");
         }
-
         private void OnFocus(object sender, EventArgs e)
         {
             Console.WriteLine("OnFocus() - Start");
@@ -203,7 +177,6 @@ namespace RectTrackerSharp
             this.Location = new Point(this.Left, this.Top);
             Console.WriteLine("OnFocus() - End");
         }
-
         private void OnDeFocus(object sender, EventArgs e)
         {
             Console.WriteLine("OnDeFocus() - Start");
@@ -212,12 +185,6 @@ namespace RectTrackerSharp
             this.Location = new Point(this.Left, this.Top);
             Console.WriteLine("OnDeFocus() - End");
         }
-
-        /// <summary>
-        /// Check point position to see if it's on tracker
-        /// </summary>
-        /// <param name="point">Current Point Position</param>
-        /// <returns></returns>
         public bool Hit_Test(Point point)
 		{
             Console.WriteLine("Hit_Test() - Start");
@@ -274,42 +241,10 @@ namespace RectTrackerSharp
 				Cursor.Current = Cursors.SizeAll;
 				CurrBorder = RESIZE_BORDER.RB_NONE;
 				
-			}
-			
-			
+			}	
             Console.WriteLine("Hit_Test() - End");
 			return true;
 		}
-			
-		/// <summary>
-		/// Cunstructor
-		/// </summary>
-		/// <param name="theControl">The Control we want to use the Tracker on</param>
-		public RectTracker(Control theControl)
-		{
-            Console.WriteLine("RectTracker(theControl) - Start");
-            // This call is required by the Windows.Forms Form Designer.
-            InitializeComponent();
-		
-
-			//set the tracked control 
-			currentControl = theControl;
-			
-			//Create the tracker
-			Create();
-			
-            Console.WriteLine("RectTracker(theControl) - End");
-		}
-		public RectTracker()
-		{
-            Console.WriteLine("RectTracker() - Start");
-            // This call is required by the Windows.Forms Form Designer.
-            InitializeComponent();
-            Console.WriteLine("RectTracker() - End");
-		}
-		/// <summary>
-		/// Setup the tracker
-		/// </summary>
 		private void Create()
 		{
             Console.WriteLine("Create() - Start");
@@ -369,25 +304,9 @@ namespace RectTrackerSharp
             g = this.CreateGraphics();
             Console.WriteLine("Create(int moveX, int moveY, int moveHeight, int moveWidt) - End");
         }
-
-        /// <summary>
-        /// Transparents the control area in the tracker
-        /// </summary>
-        /// <returns>Graphics Path made for transparenting</returns>
         private GraphicsPath BuildFrame()
 		{
             Console.WriteLine("BuildFrame() - Start");
-            //make the tracker to "contain" the control like this:
-            //
-            //
-            //+++++++++++++++++++++++
-            //+						+
-            //+						+
-            //+	 	 CONTROL		+
-            //+						+
-            //+						+
-            //+++++++++++++++++++++++
-            //
 
             GraphicsPath path = new GraphicsPath();
 
@@ -403,10 +322,6 @@ namespace RectTrackerSharp
             Console.WriteLine("BuildFrame() - End");
 			return path;
 		}
-
-		/// <summary> 
-		/// Clean up any resources being used.
-		/// </summary>
 		protected override void Dispose( bool disposing )
 		{
             Console.WriteLine("Dispose( bool disposing ) - Start");
@@ -420,12 +335,10 @@ namespace RectTrackerSharp
 			base.Dispose( disposing );
             Console.WriteLine("Dispose( bool disposing ) - End");
 		}
-		#region Component Designer generated code
-		/// <summary> 
-		/// Required method for Designer support - do not modify 
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
+        #endregion
+
+        #region Component Designer generated code
+        private void InitializeComponent()
 		{
             this.roiLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -460,6 +373,7 @@ namespace RectTrackerSharp
 
         }
         #endregion
+
         public void StartTracking(Control ctl)
         {
             Console.WriteLine("StartTracking( Control ctl ) - Start");
