@@ -585,13 +585,107 @@ namespace HelloGDI
         // 방향키 Up 누르면 발생
         private void MyRectTracker_KeyUp(object sender, KeyEventArgs e)
         {
+            int X;
+            int Y;
+            int HEIGHT;
+            int WIDTH;
 
+            X = _currentControl.Bounds.X;
+            Y = _currentControl.Bounds.Y;
+            HEIGHT = _currentControl.Bounds.Height;
+            WIDTH = _currentControl.Bounds.Width;
+
+            //Create();
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    this.Location = new Point(this.Left, this.Top);
+                    break;
+                case Keys.Down:
+                    this.Location = new Point(this.Left, this.Top);
+                    break;
+                case Keys.Left:
+                    this.Location = new Point(this.Left, this.Top);
+                    break;
+                case Keys.Right:
+                    this.Location = new Point(this.Left, this.Top);
+                    break;
+            }
         }
 
         // 방향키 Down 누르면 발생
         private void MyRectTracker_KeyDown(object sender, KeyEventArgs e)
         {
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    _currentControl.Top = _currentControl.Top - 1;
+                    this.Location = new Point(this.Left, this.Top - 1);
 
+                    this.Lb_Main.Location = new Point(this.Lb_Main.Left, this.Lb_Main.Top - 1);
+                    if (this.Top < 20)
+                    {
+                        if (this.Top < 0)
+                        {
+                            this.Top = 0;
+                        }
+                        this.Lb_Main.Location = new Point(this.Left, this.Top + this.Height + 5);
+                    }
+
+                    if ((this.Left >= 0) && (this.Top >= 20))
+                    {
+                        this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                    }
+
+                    break;
+
+                case Keys.Down:
+                    _currentControl.Top = _currentControl.Top + 1;
+                    this.Location = new Point(this.Left, this.Top + 1);
+                    this.Lb_Main.Location = new Point(this.Lb_Main.Left, this.Lb_Main.Top + 1);
+                    if (this.Top < 20)
+                        this.Lb_Main.Location = new Point(this.Left, this.Top + this.Height + 5);
+                    else
+                        this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                    if (this.Top + this.Height > _PicBoxY)
+                    {
+                        this.Top = _PicBoxY - this.Height;
+                    }
+
+                    break;
+
+                case Keys.Left:
+                    _currentControl.Left = _currentControl.Left - 1;
+                    this.Location = new Point(this.Left - 1, this.Top);
+                    this.Lb_Main.Location = new Point(this.Lb_Main.Left - 1, this.Lb_Main.Top);
+                    if (this.Left < 0)
+                    {
+                        this.Left = 0;
+                        if (this.Top < 20)
+                            this.Lb_Main.Location = new Point(this.Left, this.Top + this.Height + 5);
+                        else
+                            this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                    }
+                    break;
+
+                case Keys.Right:
+                    _currentControl.Left = _currentControl.Left + 1;
+                    this.Location = new Point(this.Left + 1, this.Top);
+                    this.Lb_Main.Location = new Point(this.Lb_Main.Left + 1, this.Lb_Main.Top);
+                    if (this.Left + this.Width > _PicBoxX)
+                    {
+                        this.Left = _PicBoxX - this.Width;
+                        if (this.Top < 20)
+                        {
+                            this.Lb_Main.Location = new Point(this.Left, this.Top + this.Height + 5);
+                        }
+                        else
+                        {
+                            this.Lb_Main.Location = new Point(this.Left, this.Top - 15);
+                        }
+                    }
+                    break;
+            }
         }
 
         private void MyRectTracker_MouseUp(object sender, MouseEventArgs e)

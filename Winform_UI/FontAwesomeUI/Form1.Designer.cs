@@ -57,7 +57,6 @@
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel5.SuspendLayout();
             this.tableLayoutPanel13.SuspendLayout();
@@ -68,7 +67,6 @@
             // 
             this.panelMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(43)))), ((int)(((byte)(78)))));
             this.panelMain.Controls.Add(this.panel4);
-            this.panelMain.Controls.Add(this.panel3);
             this.panelMain.Controls.Add(this.panel2);
             this.panelMain.Controls.Add(this.btnSave);
             this.panelMain.Controls.Add(this.btnRun);
@@ -84,24 +82,25 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.pictureBox1);
             this.panel4.Controls.Add(this.textBox1);
+            this.panel4.Controls.Add(this.panel3);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 400);
             this.panel4.Name = "panel4";
             this.panel4.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
-            this.panel4.Size = new System.Drawing.Size(200, 541);
+            this.panel4.Size = new System.Drawing.Size(200, 591);
             this.panel4.TabIndex = 8;
             // 
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.Color.FloralWhite;
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1.Location = new System.Drawing.Point(0, 10);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(200, 521);
+            this.textBox1.Size = new System.Drawing.Size(200, 425);
             this.textBox1.TabIndex = 0;
             this.textBox1.Text = "[12:06:10] Connect Success\r\n[12:06:05] Program Start\r\n[12:06:10] Run\r\n[12:06:10] " +
     "Save\r\n\r\n";
@@ -110,7 +109,7 @@
             // 
             this.panel3.Controls.Add(this.label1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 941);
+            this.panel3.Location = new System.Drawing.Point(0, 531);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(200, 50);
             this.panel3.TabIndex = 7;
@@ -289,7 +288,6 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -299,9 +297,9 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(0, 441);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Padding = new System.Windows.Forms.Padding(1);
             this.pictureBox1.Size = new System.Drawing.Size(200, 90);
@@ -499,7 +497,6 @@
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel5.ResumeLayout(false);
             this.tableLayoutPanel13.ResumeLayout(false);
