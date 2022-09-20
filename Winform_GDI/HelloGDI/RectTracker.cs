@@ -110,14 +110,14 @@ namespace RectTrackerSharp
 			//RightMiddle
 			SmallRect[7] = new Rectangle(new Point(baseRect.X + baseRect.Width,baseRect.Y + (baseRect.Height/2) - (Sqare.Height/2)),Sqare);
 			
-            foreach(Rectangle rectangle in SmallRect)
+            /*foreach(Rectangle rectangle in SmallRect)
             {
                 Console.WriteLine("smallRec size - " + rectangle.X + ", " + rectangle.Y + ", " + rectangle.Width + ", " + rectangle.Height);
-            }
+            }*/
 
-			//the whole tracker rect
 			ControlRect = new Rectangle(new Point(0,0),this.Bounds.Size);
-            Console.WriteLine("ControlRect size - " + ControlRect.X + ", " + ControlRect.Y + ", " + ControlRect.Width + ", " + ControlRect.Height);
+			//the whole tracker rect
+            //Console.WriteLine("ControlRect size - " + ControlRect.X + ", " + ControlRect.Y + ", " + ControlRect.Width + ", " + ControlRect.Height);
         }
 		public void Draw()
 		{
