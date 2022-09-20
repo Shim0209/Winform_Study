@@ -118,7 +118,6 @@ namespace RectTrackerSharp
                 Console.WriteLine("smallRec size - " + rectangle.X + ", " + rectangle.Y + ", " + rectangle.Width + ", " + rectangle.Height);
             }*/
 
-			ControlRect = new Rectangle(new Point(0,0),this.Bounds.Size);
 			//the whole tracker rect
 			ControlRect = new Rectangle(new Point(0,0),this.Bounds.Size);
             Console.WriteLine("ControlRect size - " + ControlRect.X + ", " + ControlRect.Y + ", " + ControlRect.Width + ", " + ControlRect.Height);
