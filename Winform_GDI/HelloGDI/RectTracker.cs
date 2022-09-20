@@ -24,6 +24,7 @@ namespace RectTrackerSharp
 			get {return currentControl;}
 			set 
 			{
+                Console.WriteLine("Control Get Set");
                 currentControl = value;
                 Rect = currentControl.Bounds;
             }
@@ -46,6 +47,7 @@ namespace RectTrackerSharp
 			get {return baseRect;}
 			set 
 			{
+                Console.WriteLine("Rect Get Set");
                 int X = Sqare.Width;
 				int Y = Sqare.Height;
 				int Height = value.Height;
@@ -67,13 +69,12 @@ namespace RectTrackerSharp
 		Color MyBackColor = Color.Red;
 		Color SqareColor = Color.White;
 		Color SqareLineColor = Color.Black;
-
-
         #endregion
 
         #region Constructor
         public RectTracker(Control theControl)
 		{
+            Console.WriteLine("RectTracker 생성자 with control");
             // This call is required by the Windows.Forms Form Designer.
             InitializeComponent();
 
@@ -85,6 +86,7 @@ namespace RectTrackerSharp
 		}
 		public RectTracker()
 		{
+            Console.WriteLine("RectTracker 기본 생성자");
             // This call is required by the Windows.Forms Form Designer.
             InitializeComponent();
 		}
@@ -93,8 +95,9 @@ namespace RectTrackerSharp
         #region Function
         void SetRectangles()
 		{
-			//TopLeft
-			SmallRect[0] = new Rectangle(new Point(baseRect.X - Sqare.Width,baseRect.Y - Sqare.Height),Sqare);
+            Console.WriteLine("SetRectangles 메소드");
+            //TopLeft
+            SmallRect[0] = new Rectangle(new Point(baseRect.X - Sqare.Width,baseRect.Y - Sqare.Height),Sqare);
 			//TopRight
 			SmallRect[1] = new Rectangle(new Point(baseRect.X + baseRect.Width,baseRect.Y - Sqare.Height),Sqare);
 			//BottomLeft
@@ -117,10 +120,12 @@ namespace RectTrackerSharp
 
 			ControlRect = new Rectangle(new Point(0,0),this.Bounds.Size);
 			//the whole tracker rect
-            //Console.WriteLine("ControlRect size - " + ControlRect.X + ", " + ControlRect.Y + ", " + ControlRect.Width + ", " + ControlRect.Height);
+			ControlRect = new Rectangle(new Point(0,0),this.Bounds.Size);
+            Console.WriteLine("ControlRect size - " + ControlRect.X + ", " + ControlRect.Y + ", " + ControlRect.Width + ", " + ControlRect.Height);
         }
 		public void Draw()
 		{
+            Console.WriteLine("Draw 메소드");
             try
             {
                 g.FillRectangle(Brushes.Red, ControlRect);
@@ -138,6 +143,7 @@ namespace RectTrackerSharp
         }
         public void Draw(Control Parent, Brush color)
         {
+            Console.WriteLine("Draw 메소드 with control, color");
             try
             {
                 g.FillRectangle(color, ControlRect);
@@ -167,18 +173,21 @@ namespace RectTrackerSharp
         }
         private void OnFocus(object sender, EventArgs e)
         {
+            Console.WriteLine("OnFocus 이벤트");
             //g.Clear(Color.BlueViolet);
             g.FillRectangles(Brushes.White, SmallRect);
             this.Location = new Point(this.Left, this.Top);
         }
         private void OnDeFocus(object sender, EventArgs e)
         {
+            Console.WriteLine("OnDeFocus 이벤트");
             g.Clear(Color.BlueViolet);
             //g.FillRectangles(colorSelect, SmallRect);
             this.Location = new Point(this.Left, this.Top);
         }
         public bool Hit_Test(Point point)
 		{
+            Console.WriteLine("Hit_Test 메소드");
             //Check if the point is somewhere on the tracker
             if (!ControlRect.Contains(point))
 			{
@@ -237,42 +246,46 @@ namespace RectTrackerSharp
 		}
 		private void Create()
 		{
+            Console.WriteLine("Create 메소드");
             int X;
             int Y;
             int Height;
             int Width;
 
             //create tracker bounds
-            Console.WriteLine("currentControl original bounds.X - " + currentControl.Bounds.X);
+/*            Console.WriteLine("currentControl original bounds.X - " + currentControl.Bounds.X);
             Console.WriteLine("currentControl original bounds.X - " + currentControl.Bounds.Y);
             Console.WriteLine("currentControl original bounds.Height - " + currentControl.Bounds.Height);
-            Console.WriteLine("currentControl original bounds.Width - " + currentControl.Bounds.Width);
+            Console.WriteLine("currentControl original bounds.Width - " + currentControl.Bounds.Width);*/
             X = currentControl.Bounds.X- Sqare.Width;
             Y = currentControl.Bounds.Y- Sqare.Height;
             Height = currentControl.Bounds.Height + (Sqare.Height * 2);
             Width = currentControl.Bounds.Width + (Sqare.Width * 2);
 
-
+            Console.WriteLine("Create 메소드 _ Set Bounds");
             //set bounds
             this.Bounds = new Rectangle(X, Y, Width + 1, Height + 1);
-            Console.WriteLine("this bounds.X - " + this.Bounds.X);
+/*            Console.WriteLine("this bounds.X - " + this.Bounds.X);
             Console.WriteLine("this bounds.X - " + this.Bounds.Y);
             Console.WriteLine("this bounds.Height - " + this.Bounds.Height);
-            Console.WriteLine("this bounds.Width - " + this.Bounds.Width);
+            Console.WriteLine("this bounds.Width - " + this.Bounds.Width);*/
 		
 			this.BringToFront();
 
-			//create inside rect bounds
-			Rect = currentControl.Bounds;
+            Console.WriteLine("Create 메소드 _ Rect");
+            //create inside rect bounds
+            Rect = currentControl.Bounds;
 
-			//create transparent area around the control
-			this.Region = new Region(BuildFrame());
+            Console.WriteLine("Create 메소드 _ Region");
+            //create transparent area around the control
+            this.Region = new Region(BuildFrame());
 
 			//create graphics
 			g = this.CreateGraphics();
 		}
         private void Create(int moveX, int moveY, int moveHeight, int moveWidth)
         {
+            Console.WriteLine("Create 메소드 with x, y, width, height");
             int X;
             int Y;
             int Height;
@@ -301,6 +314,7 @@ namespace RectTrackerSharp
         }
         private GraphicsPath BuildFrame()
 		{
+            Console.WriteLine("BuildFrame 메소드");
             GraphicsPath path = new GraphicsPath();
 
 			//Top Rectagle
@@ -316,6 +330,7 @@ namespace RectTrackerSharp
 		}
 		protected override void Dispose( bool disposing )
 		{
+            Console.WriteLine("Dispose 메소드 with disposing");
             if ( disposing )
 			{
 				if(components != null)
@@ -366,6 +381,7 @@ namespace RectTrackerSharp
 
         public void StartTracking(Control ctl)
         {
+            Console.WriteLine("StartTracking 메소드 with control");
             if ((ctl != null) && (ctl.Parent != null))
             {
                 ctl.BringToFront();
@@ -386,6 +402,7 @@ namespace RectTrackerSharp
         }
         private void Arrow_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
+            Console.WriteLine("Arrow_PreviewKeyDown 이벤트");
             switch (e.KeyCode)
             {
                 case Keys.Up:
@@ -404,29 +421,34 @@ namespace RectTrackerSharp
         }
         public void Mouse_Move(object sender,System.Windows.Forms.MouseEventArgs e)
 		{
+            Console.WriteLine("Mouse_move 이벤트");
             //minimum size for the control is 8x8
             if (currentControl.Height < 8)
 			{
-				currentControl.Height = 8;
+                Console.WriteLine("Mouse_move 이벤트 _ currentControl.Height");
+                currentControl.Height = 8;
 				return;
 			}
 			else if (currentControl.Width < 8)
 			{
-				currentControl.Width = 8;
+                Console.WriteLine("Mouse_move 이벤트 _ currentControl.Width");
+                currentControl.Width = 8;
 				return;
 			}
 
             if (currentControl.Height > this.Height)
             {
+                Console.WriteLine("Mouse_move 이벤트 _ currentControl.Height > this.Height");
                 currentControl.Height = this.Height;
                 return;
             }
             else if (currentControl.Width > this.Width)
             {
+                Console.WriteLine("Mouse_move 이벤트 _ currentControl.Width > this.Width");
                 currentControl.Width = this.Width;
                 return;
             }
-
+            Console.WriteLine("Mouse_move 이벤트 _ this.CurrBorder - " + this.CurrBorder );
             switch (this.CurrBorder)
 			{
 				case RESIZE_BORDER.RB_TOP:
@@ -524,6 +546,7 @@ namespace RectTrackerSharp
 		}
 		private void RectTracker_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
+            Console.WriteLine("RectTracker_MouseMove 이벤트");
             Cursor = Cursors.Arrow;
 
 
@@ -582,12 +605,14 @@ namespace RectTrackerSharp
 		}
 		private void RectTracker_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
+            Console.WriteLine("RectTracker_Paint 이벤트");
             //redraw sqares
             //Draw(ROIparent, colorSelect);
             Draw(this.Parent, colorSelect);
 		}
 		private void RectTracker_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
+            Console.WriteLine("RectTracker_MouseUp 이벤트");
             //the mouse is up, recreate the control to append changes
             if (this.Focused)
             {
@@ -665,6 +690,7 @@ namespace RectTrackerSharp
         }
         private void RectTracker_KeyDown(object sender, KeyEventArgs e)
         {
+            Console.WriteLine("RectTracker_KeyDown 이벤트");
             switch (e.KeyCode)
             {
                 case Keys.Up:
@@ -738,6 +764,7 @@ namespace RectTrackerSharp
         }
         private void RectTracker_KeyUp(object sender, KeyEventArgs e)
         {
+            Console.WriteLine("RectTracker_KeyUp 이벤트");
             int X;
             int Y;
             int HEIGHT;
@@ -768,6 +795,7 @@ namespace RectTrackerSharp
         }
         private void RectTracker_LocationChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("RectTracker_LocationChanged 이벤트");
             lineBold = Sqare.Height;
 
             if (this.Left < 0)
@@ -822,6 +850,7 @@ namespace RectTrackerSharp
         }
         private void RectTracker_VisibleChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("RectTracker_VisibleChanged 이벤트");
             if (this.Visible)
             {
                 this.roiLabel.Visible = true;
@@ -832,6 +861,7 @@ namespace RectTrackerSharp
         }
         private void RectTracker_SizeChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("RectTracker_SizeChanged 이벤트");
             //Create();
         }
     }
