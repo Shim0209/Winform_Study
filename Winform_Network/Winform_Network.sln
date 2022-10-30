@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketCommunication_Server"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketCommunication_Client", "SocketCommunication_Client\SocketCommunication_Client.csproj", "{CC83DE1B-9ACC-4081-B054-E4709837432C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkTester", "NetworkTester\NetworkTester.csproj", "{AEED7659-BB34-44A5-ADCA-8C0CE478E257}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,14 @@ Global
 		{CC83DE1B-9ACC-4081-B054-E4709837432C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CC83DE1B-9ACC-4081-B054-E4709837432C}.Release|x64.ActiveCfg = Release|Any CPU
 		{CC83DE1B-9ACC-4081-B054-E4709837432C}.Release|x64.Build.0 = Release|Any CPU
+		{AEED7659-BB34-44A5-ADCA-8C0CE478E257}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEED7659-BB34-44A5-ADCA-8C0CE478E257}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEED7659-BB34-44A5-ADCA-8C0CE478E257}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AEED7659-BB34-44A5-ADCA-8C0CE478E257}.Debug|x64.Build.0 = Debug|Any CPU
+		{AEED7659-BB34-44A5-ADCA-8C0CE478E257}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEED7659-BB34-44A5-ADCA-8C0CE478E257}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEED7659-BB34-44A5-ADCA-8C0CE478E257}.Release|x64.ActiveCfg = Release|Any CPU
+		{AEED7659-BB34-44A5-ADCA-8C0CE478E257}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

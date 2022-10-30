@@ -144,7 +144,6 @@
             this.RotationBtn.TabIndex = 11;
             this.RotationBtn.Text = "ROTATION";
             this.RotationBtn.UseVisualStyleBackColor = true;
-            this.RotationBtn.Click += new System.EventHandler(this.RotationBtn_Click);
             // 
             // DataTB
             // 
@@ -170,7 +169,6 @@
             this.CloseBtn.TabIndex = 6;
             this.CloseBtn.Text = "해제";
             this.CloseBtn.UseVisualStyleBackColor = true;
-            this.CloseBtn.Click += new System.EventHandler(this.CloseBtn_Click);
             // 
             // OpenBtn
             // 
@@ -180,7 +178,6 @@
             this.OpenBtn.TabIndex = 5;
             this.OpenBtn.Text = "연결";
             this.OpenBtn.UseVisualStyleBackColor = true;
-            this.OpenBtn.Click += new System.EventHandler(this.OpenBtn_Click);
             // 
             // IpPortInfoTB
             // 
@@ -230,7 +227,6 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "Server";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Server_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
