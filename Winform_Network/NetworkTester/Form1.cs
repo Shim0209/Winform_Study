@@ -17,7 +17,7 @@ namespace NetworkTester
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            tlpViewPoint.Controls.Add(ucSetting);
+            tlpViewPoint.Controls.Add(ucTcpip);
         }
 
         private void Init_MainForm()

@@ -35,12 +35,9 @@
             this.btnSerial = new System.Windows.Forms.Button();
             this.btnUdp = new System.Windows.Forms.Button();
             this.btnTcpip = new System.Windows.Forms.Button();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tlpViewPoint = new System.Windows.Forms.TableLayoutPanel();
-            this.tbViewPoint = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -48,8 +45,8 @@
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Controls.Add(this.tlpViewPoint, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -57,6 +54,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1069, 735);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
@@ -79,14 +77,13 @@
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 68F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 73F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(1069, 73);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // btnExit
             // 
             this.btnExit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnExit.FlatAppearance.BorderSize = 0;
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExit.Location = new System.Drawing.Point(852, 0);
             this.btnExit.Margin = new System.Windows.Forms.Padding(0);
@@ -100,7 +97,6 @@
             // btnSetting
             // 
             this.btnSetting.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSetting.FlatAppearance.BorderSize = 0;
             this.btnSetting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSetting.Location = new System.Drawing.Point(639, 0);
             this.btnSetting.Margin = new System.Windows.Forms.Padding(0);
@@ -114,7 +110,6 @@
             // btnSerial
             // 
             this.btnSerial.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSerial.FlatAppearance.BorderSize = 0;
             this.btnSerial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSerial.Location = new System.Drawing.Point(426, 0);
             this.btnSerial.Margin = new System.Windows.Forms.Padding(0);
@@ -128,7 +123,6 @@
             // btnUdp
             // 
             this.btnUdp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnUdp.FlatAppearance.BorderSize = 0;
             this.btnUdp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUdp.Location = new System.Drawing.Point(213, 0);
             this.btnUdp.Margin = new System.Windows.Forms.Padding(0);
@@ -142,7 +136,6 @@
             // btnTcpip
             // 
             this.btnTcpip.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnTcpip.FlatAppearance.BorderSize = 0;
             this.btnTcpip.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTcpip.Location = new System.Drawing.Point(0, 0);
             this.btnTcpip.Margin = new System.Windows.Forms.Padding(0);
@@ -153,47 +146,20 @@
             this.btnTcpip.UseVisualStyleBackColor = true;
             this.btnTcpip.Click += new System.EventHandler(this.btnTcpip_Click);
             // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel3.Controls.Add(this.tlpViewPoint, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.tbViewPoint, 0, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 73);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(1069, 662);
-            this.tableLayoutPanel3.TabIndex = 1;
-            // 
             // tlpViewPoint
             // 
             this.tlpViewPoint.ColumnCount = 1;
             this.tlpViewPoint.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpViewPoint.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpViewPoint.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpViewPoint.Location = new System.Drawing.Point(855, 0);
+            this.tlpViewPoint.Location = new System.Drawing.Point(0, 73);
             this.tlpViewPoint.Margin = new System.Windows.Forms.Padding(0);
             this.tlpViewPoint.Name = "tlpViewPoint";
             this.tlpViewPoint.RowCount = 1;
             this.tlpViewPoint.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpViewPoint.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 616F));
-            this.tlpViewPoint.Size = new System.Drawing.Size(214, 397);
-            this.tlpViewPoint.TabIndex = 2;
-            // 
-            // tbViewPoint
-            // 
-            this.tbViewPoint.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbViewPoint.Location = new System.Drawing.Point(3, 3);
-            this.tbViewPoint.Multiline = true;
-            this.tbViewPoint.Name = "tbViewPoint";
-            this.tbViewPoint.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbViewPoint.Size = new System.Drawing.Size(849, 391);
-            this.tbViewPoint.TabIndex = 3;
+            this.tlpViewPoint.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 397F));
+            this.tlpViewPoint.Size = new System.Drawing.Size(1069, 662);
+            this.tlpViewPoint.TabIndex = 3;
             // 
             // Form1
             // 
@@ -206,8 +172,6 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -221,9 +185,7 @@
         private System.Windows.Forms.Button btnSerial;
         private System.Windows.Forms.Button btnUdp;
         private System.Windows.Forms.Button btnTcpip;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.TableLayoutPanel tlpViewPoint;
-        public System.Windows.Forms.TextBox tbViewPoint;
     }
 }
 
